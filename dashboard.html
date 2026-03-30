@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - JTBS Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar-gradient {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        }
+        .header-shadow {
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+<div class="min-h-screen flex">
+
+
+<!-- Sidebar -->
+<aside id="sidebar"
+class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+
+    <div class="p-6 border-b border-slate-700 text-center">
+        <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
+            <img src="files/logoSc.jpg" alt="Society Logo" class="w-full h-full object-contain">
+        </div>
+        <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">
+            Jamia Tarbia Tul Banat Society
+        </h1>
+    </div>
+
+    <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <a href="#" class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl text-white font-medium">
+            <i class="fas fa-th-large w-5"></i> Dashboard
+        </a>
+        <a href="mainAdmission.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+            <i class="fas fa-user-graduate w-5"></i> Admissions
+        </a>
+         <a href="main_StuAttendance.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-calendar-check w-5"></i> Attendance
+            </a>
+        <a href="mainfeeTransaction.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+            <i class="fas fa-receipt w-5"></i> Fee Transactions
+        </a>
+        <a href="mainBank.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+            <i class="fas fa-university w-5"></i> Bank Accounts
+        </a>
+        <a href="#" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+            <i class="fas fa-wallet w-5"></i> School Expenses
+        </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-700">
+        <button class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</aside>
+
+<!-- Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
+
+<!-- Main Content -->
+<div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Header -->
+    <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
+        
+        <!-- Hamburger -->
+        <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+
+        <div class="flex-1 overflow-hidden">
+            <h2 class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase">
+                JAMIA TARBIA TUL BANAT SOCIETY JAJOR
+            </h2>
+            <p class="text-[10px] md:text-xs text-slate-500 font-medium flex items-center gap-1">
+                <i class="fas fa-map-marker-alt text-emerald-500"></i> 
+                DISTRICT KHAIRTHAL-TIJARA, RAJASTHAN
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3 md:gap-6 pl-4 border-l border-slate-100 ml-4">
+            <div class="hidden md:block text-right">
+                <p id="admin-name" class="text-sm font-bold text-slate-700">Amit Admin</p>
+                <p class="text-[10px] text-emerald-600 font-bold uppercase mt-1">Super Admin</p>
+            </div>
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-100 rounded-2xl flex items-center justify-center border-2 border-emerald-500">
+                <i class="fas fa-user-shield text-emerald-700"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+ <main class="p-4 md:p-8">
+
+    <div class="mb-8">
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-center gap-6">
+            <div class="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center border-2 border-emerald-500 text-3xl shadow-inner">
+                <i class="fas fa-user-shield text-emerald-700"></i>
+            </div>
+            <div class="text-center md:text-left flex-1">
+                <h3 class="text-2xl font-black text-slate-800" id="profile-name">Loading...</h3>
+                <p class="text-slate-500 font-medium" id="profile-email">Please wait while we sync your profile...</p>
+                <div class="mt-2 flex flex-wrap justify-center md:justify-start gap-2">
+                    <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Super Admin Access</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full uppercase tracking-widest" id="last-activity">Session Active</span>
+                </div>
+            </div>
+            <div class="hidden lg:block text-right px-6 border-l border-slate-100">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Organization</p>
+                <p class="text-xs font-bold text-slate-700">JTBS Society Jajor</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+        
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 hover:shadow-md transition">
+            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Registered</h3>
+            <p class="text-3xl font-black text-slate-800" id="count-registered">0</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 hover:shadow-md transition">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Active Admissions</h3>
+            <p class="text-3xl font-black text-slate-800" id="count-active">0</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 hover:shadow-md transition">
+            <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Pending Approvals</h3>
+            <p class="text-3xl font-black text-slate-800" id="count-pending">0</p>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-50 hover:shadow-md transition">
+            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider">Receipts Generated</h3>
+            <p class="text-3xl font-black text-slate-800" id="count-receipts">0</p>
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Function to Fetch Dashboard Stats
+    async function fetchDashboardStats() {
+        try {
+            // 1. Fetch Students to count Registered, Active, and Pending
+            // Note: Admin ID is hardcoded here for current session context as per your model
+            const adminId = localStorage.getItem('adminId'); 
+            const studentRes = await fetch(`http://localhost:3000/studentAdmission/allstudents/get?admin_id=${adminId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const studentData = await studentRes.json();
+
+            if (studentRes.ok) {
+                const students = studentData.data;
+                document.getElementById('count-registered').innerText = students.length;
+                document.getElementById('count-active').innerText = students.filter(s => s.status === 'approved').length;
+                document.getElementById('count-pending').innerText = students.filter(s => s.status === 'pending').length;
+            }
+
+            // 2. Fetch Transactions count (Based on your fee_Tr_Controller)
+            // Assuming you have a route to get all, or using existing fetch for classwise and aggregating
+            const transactionRes = await fetch(`http://localhost:3000/feeManagement/get`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const transData = await transactionRes.json();
+            
+            if(transactionRes.ok) {
+                document.getElementById('count-receipts').innerText = transData.total_transactions || 0;
+            }
+
+        } catch (err) {
+            console.error("Dashboard Stats Fetch Error:", err);
+        }
+    }
+
+    // Admin Profile Logic
+    async function loadProfile() {
+        try {
+            const res = await fetch('http://localhost:3000/admin/profile', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                document.getElementById('admin-name').innerText = data.admin.name;
+                document.getElementById('profile-name').innerText = data.admin.name;
+                document.getElementById('profile-email').innerText = data.admin.email;
+                
+                localStorage.setItem('adminName', data.admin.name);
+                localStorage.setItem('adminEmail', data.admin.email);
+                localStorage.setItem('adminId', data.admin.id);
+            } else {
+                logout();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    // Execute functions
+    await loadProfile();
+    await fetchDashboardStats();
+});
+</script>
+</div>
+
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const token = localStorage.getItem('adminToken');
+
+    // 🔐 Login check
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Sidebar toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    });
+
+    // ✅ FIRST: show from localStorage (fast UI)
+    const name = localStorage.getItem('adminName');
+    const email = localStorage.getItem('adminEmail');
+
+    if(name){
+        document.getElementById('admin-name').innerText = name;
+    }
+    if(email){
+        document.getElementById('admin-email').innerText = email;
+    }
+
+    // ✅ SECOND: fetch latest from backend
+    try {
+        const res = await fetch('http://localhost:3000/admin/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            document.getElementById('admin-name').innerText = data.admin.name;
+            document.getElementById('admin-email').innerText = data.admin.email;
+
+            // update localStorage
+            localStorage.setItem('adminName', data.admin.name);
+            localStorage.setItem('adminEmail', data.admin.email);
+
+        } else {
+            logout();
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+
+});
+
+// 🔓 Logout
+function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+}
+
+// attach logout
+document.querySelector('button').addEventListener('click', logout);
+</script>
+
+</body>
+</html>

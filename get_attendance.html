@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report | JTBS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+      .sidebar-gradient {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      }
+      .header-shadow {
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+<div class="min-h-screen flex">
+
+      <aside
+        id="sidebar"
+        class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300"
+      >
+        <div class="p-6 border-b border-slate-700 text-center">
+          <div
+            class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500"
+          >
+            <img
+              src="files/logoSc.jpg"
+              alt="Society Logo"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <h1
+            class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight"
+          >
+            Jamia Tarbia Tul Banat Society
+          </h1>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <a
+            href="dashboard.html"
+            class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl transition"
+          >
+            <i class="fas fa-th-large w-5"></i> Dashboard
+          </a>
+          <a
+            href="mainAdmission.html"
+            class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-user-graduate w-5"></i> Admissions
+          </a>
+          <a
+            href="main_StuAttendance.html"
+            class="flex items-center gap-3 p-3 bg-indigo-600 rounded-xl text-white font-medium shadow-lg shadow-indigo-900/20"
+          >
+            <i class="fas fa-calendar-check w-5"></i> Attendance
+          </a>
+          <a
+            href="mainfeeTransaction.html"
+            class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-receipt w-5"></i> Fee Transactions
+          </a>
+          <a
+            href="mainBank.html"
+            class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-university w-5"></i> Bank Accounts
+          </a>
+          <a
+            href="expenseMain.html"
+            class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-wallet w-5"></i> School Expenses
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+          <button
+            onclick="logout()"
+            class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </aside>
+
+      <div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
+
+    <div class="flex-1 flex flex-col min-w-0">
+      <header
+          class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8"
+        >
+          <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+
+          <div class="flex-1 overflow-hidden">
+            <h2
+              class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase"
+            >
+              JAMIA TARBIA TUL BANAT SOCIETY JAJOR
+            </h2>
+            <p
+              class="text-[10px] md:text-xs text-slate-500 font-medium flex items-center gap-1"
+            >
+              <i class="fas fa-map-marker-alt text-emerald-500"></i>
+              DISTRICT KHAIRTHAL-TIJARA, RAJASTHAN
+            </p>
+          </div>
+
+          <div
+            class="flex items-center gap-3 md:gap-6 pl-4 border-l border-slate-100 ml-4"
+          >
+            <div class="hidden md:block text-right">
+              <p id="admin-name" class="text-sm font-bold text-slate-700">
+                Amit Admin
+              </p>
+              <p class="text-[10px] text-indigo-600 font-bold uppercase mt-1">
+                Academic Head
+              </p>
+            </div>
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 bg-indigo-50 rounded-2xl flex items-center justify-center border-2 border-indigo-500"
+            >
+              <i class="fas fa-user-check text-indigo-700 text-lg"></i>
+            </div>
+          </div>
+        </header>
+
+        <main class="p-4 md:p-8 w-full max-w-7xl mx-auto">
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100 mb-8 flex flex-wrap gap-4 items-end no-print">
+                <div class="flex-1 min-w-[180px]">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-1 block">Classwise View</label>
+                    <select id="class-filter" class="w-full p-3 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="">All Classes</option>
+                        <script>for(let i=1;i<=12;i++) document.write(`<option value="${i}">Class ${i}</option>`)</script>
+                    </select>
+                </div>
+                <div class="flex-1 min-w-[180px]">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-1 block">Filter By Date (Optional)</label>
+                    <input type="date" id="date-filter" class="w-full p-3 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <button onclick="getAttendanceReport()" class="px-8 py-3.5 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-emerald-600 transition shadow-lg">
+                    <i class="fas fa-search mr-2"></i> Show Data
+                </button>
+                <button onclick="window.print()" class="px-8 py-3.5 bg-white border text-slate-600 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition">
+                    <i class="fas fa-print mr-2"></i> Print Report
+                </button>
+            </div>
+
+            <div id="stats-panel" class="hidden mb-6 flex gap-4">
+                <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-3xl flex-1 text-center">
+                    <p class="text-[10px] font-black text-emerald-600 uppercase">Total Present</p>
+                    <h3 id="p-count" class="text-2xl font-black text-emerald-700">0</h3>
+                </div>
+                <div class="bg-rose-50 border border-rose-100 p-4 rounded-3xl flex-1 text-center">
+                    <p class="text-[10px] font-black text-rose-600 uppercase">Total Absent</p>
+                    <h3 id="a-count" class="text-2xl font-black text-rose-700">0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 border-b">
+                            <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Student (Email/ID)</th>
+                            <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Class</th>
+                            <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest text-center">Attendance Date</th>
+                            <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="report-tbody" class="divide-y divide-slate-50 text-sm">
+                        <tr><td colspan="4" class="p-20 text-center text-slate-400 italic">No records displayed. Please select filters.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    const API_URL = "http://localhost:3000";
+
+    async function getAttendanceReport() {
+        const cls = document.getElementById('class-filter').value;
+        const date = document.getElementById('date-filter').value;
+        const adminId = localStorage.getItem('adminId');
+        const token = localStorage.getItem('adminToken');
+        const tbody = document.getElementById('report-tbody');
+
+        if(!adminId) return alert("Login session expired!");
+
+        tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center"><i class="fas fa-spinner fa-spin text-emerald-500 text-3xl"></i></td></tr>`;
+
+        try {
+            let url = `${API_URL}/attendance/class-report?admin_id=${adminId}`;
+            if(cls) url += `&class_applied=${cls}`;
+            if(date) url += `&date=${date}`;
+
+            const res = await fetch(url, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const result = await res.json();
+
+            if(result.success) {
+                renderTable(result.data);
+                showStats(result.data);
+            }
+        } catch (e) { 
+            tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-rose-500 font-bold">Failed to connect to server.</td></tr>`;
+        }
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('report-tbody');
+        if(data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-rose-500 font-black">NO RECORDS FOUND</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = data.map(r => `
+            <tr class="hover:bg-slate-50 transition">
+                <td class="p-5">
+                    <p class="font-black text-slate-800 uppercase tracking-tighter">${r.student_email.split('@')[0]}</p>
+                    <p class="text-[10px] text-slate-400 font-bold tracking-widest">${r.student_email}</p>
+                </td>
+                <td class="p-5 font-bold text-slate-600">CLASS ${r.class_applied}</td>
+                <td class="p-5 text-center font-black text-slate-700">${r.attendance_date}</td>
+                <td class="p-5">
+                    <div class="flex justify-center">
+                        <span class="px-4 py-1.5 rounded-2xl text-[10px] font-black uppercase tracking-widest border shadow-sm
+                            ${r.status === 'PRESENT' ? 'bg-emerald-500 text-white border-emerald-400' : 'bg-rose-500 text-white border-rose-400'}">
+                            ${r.status}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function showStats(data) {
+        const panel = document.getElementById('stats-panel');
+        panel.classList.remove('hidden');
+        const p = data.filter(r => r.status === 'PRESENT').length;
+        const a = data.filter(r => r.status === 'ABSENT').length;
+        document.getElementById('p-count').innerText = p;
+        document.getElementById('a-count').innerText = a;
+    }
+
+ // Sidebar Toggle
+        const menuBtn = document.getElementById("menu-btn");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        menuBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          overlay.classList.toggle("hidden");
+        });
+
+        overlay.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          overlay.classList.add("hidden");
+        });
+     
+
+      function logout() {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+      </script>
+</body>
+</html>

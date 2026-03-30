@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Students | Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+   <style>
+
+        .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
+        .header-shadow { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+
+</style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+
+<div class="min-h-screen flex">
+    <aside id="sidebar" class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 border-b border-slate-700 text-center">
+            <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
+                <img src="files/logoSc.jpg" alt="Society Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">
+                Jamia Tarbia Tul Banat Society
+            </h1>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl transition">
+                <i class="fas fa-th-large w-5"></i> Dashboard
+            </a>
+            <a href="mainAdmission.html" class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl text-white font-medium shadow-lg shadow-emerald-900/20">
+                <i class="fas fa-user-graduate w-5"></i> Admissions
+            </a>
+            <a href="main_StuAttendance.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-calendar-check w-5"></i> Attendance
+            </a>
+            <a href="mainfeeTransaction.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-receipt w-5"></i> Fee Transactions
+            </a>
+            <a href="mainBank.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-university w-5"></i> Bank Accounts
+            </a>
+            <a href="expenseMain.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-wallet w-5"></i> School Expenses
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
+
+
+    <div class="flex-1 flex flex-col min-w-0">
+        <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
+            <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600"><i class="fas fa-bars text-xl"></i></button>
+            <div class="flex-1 overflow-hidden">
+                <h2 class="text-lg font-bold text-slate-800 uppercase truncate">Students Management</h2>
+            </div>
+        </header>
+
+        <main class="p-4 md:p-8">
+            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50 border-b">
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Student Info</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Class</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Guardian Info</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest">Status Action</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest text-center">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-list" class="divide-y divide-slate-50">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div id="detailsModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-5xl max-h-[90vh] rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in duration-200">
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center"><i class="fas fa-id-card"></i></div>
+                <h3 class="text-xl font-black text-slate-800 tracking-tight">Student Comprehensive Profile</h3>
+            </div>
+            <button onclick="closeModal()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar space-y-10">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2 text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Student Photo</p>
+                    <img id="m-s-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                </div>
+                <div class="space-y-2 text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Father's Photo</p>
+                    <img id="m-f-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                </div>
+                <div class="space-y-2 text-center">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mother's Photo</p>
+                    <img id="m-m-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="space-y-6">
+                    <h4 class="font-bold text-emerald-600 border-b pb-2 flex items-center gap-2"><i class="fas fa-graduation-cap"></i> Academic & Personal</h4>
+                    <div class="grid grid-cols-2 gap-y-6">
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">Reg No.</p><p id="m-reg" class="font-black text-slate-800"></p></div>
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">Session</p><p id="m-session" class="font-bold text-slate-700"></p></div>
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">Name</p><p id="m-name" class="font-bold text-slate-700"></p></div>
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">DOB</p><p id="m-dob" class="font-bold text-slate-700"></p></div>
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">Aadhar</p><p id="m-aadhar" class="font-bold text-slate-700"></p></div>
+                        <div><p class="text-[10px] text-slate-400 uppercase font-bold">Blood Group</p><p id="m-blood" class="font-bold text-rose-600"></p></div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="font-bold text-emerald-600 border-b pb-2 flex items-center gap-2"><i class="fas fa-users"></i> Family & Contact</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                            <div><p class="text-[9px] text-slate-400 uppercase">Father's Name</p><p id="m-fname" class="font-bold"></p></div>
+                            <div class="text-right"><p class="text-[9px] text-slate-400 uppercase">Mobile</p><p id="m-fmob" class="font-bold text-emerald-600"></p></div>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                            <div><p class="text-[9px] text-slate-400 uppercase">Mother's Name</p><p id="m-mname" class="font-bold"></p></div>
+                            <div class="text-right"><p class="text-[9px] text-slate-400 uppercase">Mobile</p><p id="m-mmob" class="font-bold text-emerald-600"></p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-4">
+                    <h4 class="font-bold text-emerald-600 border-b pb-2"><i class="fas fa-map-marker-alt"></i> Address Details</h4>
+                    <p id="m-address" class="text-sm font-medium text-slate-600 leading-relaxed"></p>
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100">
+                        <p class="text-[10px] text-amber-600 font-bold uppercase mb-1">Remarks/Summary</p>
+                        <p id="m-remarks" class="text-xs italic text-slate-600"></p>
+                    </div>
+                </div>
+                <div class="space-y-4 text-center border-l border-slate-100 pl-6">
+                    <h4 class="font-bold text-emerald-600 border-b pb-2">Student Signature</h4>
+                    <img id="m-sign" class="max-h-24 mx-auto object-contain bg-slate-50 rounded-xl p-2 border">
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t bg-slate-50 flex justify-end">
+            <button onclick="closeModal()" class="px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-emerald-600 transition">Dismiss View</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API = "http://localhost:3000/studentAdmission";
+    const IMG_BASE = "http://localhost:3000/uploads/students/";
+    const adminId = localStorage.getItem('adminId'); // Make sure adminId is stored
+
+    async function fetchAllStudents() {
+        try {
+            const res = await fetch(`${API}/allstudents/get?admin_id=${adminId}`);
+            const result = await res.json();
+            if(result.success) renderTable(result.data);
+        } catch (err) { console.log("Fetch Error", err); }
+    }
+
+    function renderTable(students) {
+        const tbody = document.getElementById('student-list');
+        tbody.innerHTML = students.map(s => {
+            const statusColor = s.status === 'approved' ? 'bg-emerald-50 text-emerald-600' : s.status === 'rejected' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600';
+            
+            return `
+            <tr class="hover:bg-slate-50/50 transition">
+                <td class="p-5">
+                    <div class="flex items-center gap-3">
+                        <img src="${s.student_photo ? IMG_BASE + s.student_photo.split('\\').pop() : 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover border">
+                        <div>
+                            <p class="font-bold text-slate-800">${s.first_name} ${s.last_name}</p>
+                            <p class="text-[10px] text-slate-400 font-bold">${s.email}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="p-5 font-black text-xs text-slate-600">CLASS ${s.class_applied}</td>
+                <td class="p-5">
+                    <p class="text-xs font-bold text-slate-700">${s.father_name}</p>
+                    <p class="text-[10px] text-emerald-600 font-bold">${s.father_mobile}</p>
+                </td>
+                <td class="p-5">
+                    <select onchange="updateStatus('${s.email}', this.value)" class="${statusColor} p-2 text-[10px] font-black rounded-lg border-none outline-none ring-1 ring-slate-200">
+                        <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>PENDING</option>
+                        <option value="approved" ${s.status === 'approved' ? 'selected' : ''}>APPROVED</option>
+                        <option value="rejected" ${s.status === 'rejected' ? 'selected' : ''}>REJECTED</option>
+                    </select>
+                </td>
+                <td class="p-5 text-center">
+                    <button onclick='showDetails(${JSON.stringify(s)})' class="w-10 h-10 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-emerald-600 transition">
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    async function updateStatus(email, status) {
+        try {
+            const res = await fetch(`${API}/update-status`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, status })
+            });
+            if(res.ok) { alert("Status updated!"); fetchAllStudents(); }
+        } catch (err) { alert("Update failed"); }
+    }
+
+    function showDetails(s) {
+        const clean = (p) => p ? IMG_BASE + p.split('\\').pop() : 'https://via.placeholder.com/300';
+        
+        document.getElementById('m-s-photo').src = clean(s.student_photo);
+        document.getElementById('m-f-photo').src = clean(s.father_photo);
+        document.getElementById('m-m-photo').src = clean(s.mother_photo);
+        document.getElementById('m-sign').src = clean(s.signature);
+
+        document.getElementById('m-reg').innerText = s.registration_no;
+        document.getElementById('m-name').innerText = s.first_name + " " + s.last_name;
+        document.getElementById('m-dob').innerText = new Date(s.date_of_birth).toLocaleDateString();
+        document.getElementById('m-aadhar').innerText = s.aadhar_no || 'N/A';
+        document.getElementById('m-blood').innerText = s.blood_group;
+        document.getElementById('m-session').innerText = s.academic_year;
+        document.getElementById('m-fname').innerText = s.father_name;
+        document.getElementById('m-fmob').innerText = s.father_mobile;
+        document.getElementById('m-mname').innerText = s.mother_name;
+        document.getElementById('m-mmob').innerText = s.mother_mobile;
+        document.getElementById('m-address').innerText = `${s.address_line1}, ${s.city}, ${s.state} - ${s.pincode}`;
+        document.getElementById('m-remarks').innerText = s.remarks || 'No specific remarks.';
+
+        document.getElementById('detailsModal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('detailsModal').classList.add('hidden'); }
+
+// Sidebar Toggle (FIXED)
+const menuBtn = document.getElementById("menu-btn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+
+menuBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("-translate-x-full");
+    overlay.classList.toggle("hidden");
+});
+
+overlay.addEventListener("click", () => {
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+});
+
+// Initial Fetch
+    fetchAllStudents();
+</script>
+</body>
+</html>

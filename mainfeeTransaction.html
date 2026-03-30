@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Management | JTBS Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
+        .header-shadow { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+<div class="min-h-screen flex">
+
+    <aside id="sidebar" class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 border-b border-slate-700 text-center">
+            <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
+                <img src="files/logoSc.jpg" alt="Society Logo" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">
+                Jamia Tarbia Tul Banat Society
+            </h1>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl transition">
+                <i class="fas fa-th-large w-5"></i> Dashboard
+            </a>
+            <a href="mainAdmission.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-user-graduate w-5"></i> Admissions
+            </a>
+
+             <a href="main_StuAttendance.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl ">
+                <i class="fas fa-calendar-check w-5"></i> Attendance
+            </a>
+
+            <a href="mainfeeTransaction.html" class="flex items-center gap-3 p-3 bg-blue-600 rounded-xl text-white font-medium shadow-lg shadow-blue-900/20">
+                <i class="fas fa-receipt w-5"></i> Fee Transactions
+            </a>
+            <a href="mainBank.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-university w-5"></i> Bank Accounts
+            </a>
+            <a href="expenseMain.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+                <i class="fas fa-wallet w-5"></i> School Expenses
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
+
+    <div class="flex-1 flex flex-col min-w-0">
+
+        <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
+            <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <div class="flex-1 overflow-hidden">
+                <h2 class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase">
+                    JAMIA TARBIA TUL BANAT SOCIETY JAJOR
+                </h2>
+                <p class="text-[10px] md:text-xs text-slate-500 font-medium flex items-center gap-1">
+                    <i class="fas fa-map-marker-alt text-emerald-500"></i> 
+                    DISTRICT KHAIRTHAL-TIJARA, RAJASTHAN
+                </p>
+            </div>
+
+            <div class="flex items-center gap-3 md:gap-6 pl-4 border-l border-slate-100 ml-4">
+                <div class="hidden md:block text-right">
+                    <p id="admin-name" class="text-sm font-bold text-slate-700">Amit Admin</p>
+                    <p class="text-[10px] text-blue-600 font-bold uppercase mt-1">Accounts Manager</p>
+                </div>
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-2xl flex items-center justify-center border-2 border-blue-500 shadow-sm">
+                    <i class="fas fa-file-invoice-dollar text-blue-700 text-lg"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-6 md:p-12">
+            
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Fee & Transaction Control</h2>
+                <p class="text-slate-500 mt-2 font-medium">Process payments, generate receipts, and audit school finances.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 p-8 flex flex-col items-center text-center group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                        <i class="fas fa-plus-circle text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Collect Fee</h3>
+                    <p class="text-slate-500 text-sm mb-8 leading-relaxed">Create a new credit/debit transaction for a student and update bank balance.</p>
+                    <button onclick="window.location.href='create_transaction.html'" 
+                        class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition active:scale-95">
+                        NEW PAYMENT
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 p-8 flex flex-col items-center text-center group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i class="fas fa-search-dollar text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Student History</h3>
+                    <p class="text-slate-500 text-sm mb-8 leading-relaxed">Fetch all transaction receipts for a specific student using their ID.</p>
+                    <button onclick="window.location.href='student_transactions.html'" 
+                        class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition active:scale-95">
+                        GET STUDENT LOGS
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 p-8 flex flex-col items-center text-center group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-20 h-20 bg-purple-50 rounded-3xl flex items-center justify-center text-purple-600 mb-6 group-hover:bg-purple-600 group-hover:text-white transition-all">
+                        <i class="fas fa-list-ul text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">All Records</h3>
+                    <p class="text-slate-500 text-sm mb-8 leading-relaxed">View and filter the complete list of all transactions by class or date.</p>
+                    <button onclick="window.location.href='all_transactions.html'" 
+                        class="w-full py-4 bg-purple-600 text-white rounded-2xl font-bold shadow-lg shadow-purple-200 hover:bg-purple-700 transition active:scale-95">
+                        VIEW ALL LIST
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="mt-16 bg-slate-900 rounded-[2.5rem] p-10 text-white border border-slate-800 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i class="fas fa-coins text-9xl"></i>
+                </div>
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center">
+                    <div>
+                        <p class="text-blue-400 font-bold uppercase tracking-widest text-xs">Financial Audit</p>
+                        <h4 class="text-2xl font-bold mt-1 tracking-tight">Transaction Security Active</h4>
+                        <p class="text-slate-400 text-sm mt-2 font-medium italic">Every credit/debit is synced with Bank Models[cite: 1].</p>
+                    </div>
+                    <div class="flex gap-8 mt-6 md:mt-0">
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-blue-400">₹ INR</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Currency</p>
+                        </div>
+                        <div class="h-12 w-[1px] bg-slate-700 hidden md:block"></div>
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-emerald-400">SECURE</p>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Protocol</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 🔐 Auth Check
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const name = localStorage.getItem('adminName');
+    if(name) document.getElementById('admin-name').innerText = name;
+
+    const menuBtn = document.getElementById('menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+    });
+});
+
+function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+}
+</script>
+
+</body>
+</html>

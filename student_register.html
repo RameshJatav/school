@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Student | JTBS Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .sidebar-gradient {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      }
+      .header-shadow {
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans antialiased">
+    <div class="min-h-screen flex">
+      <aside
+        id="sidebar"
+        class="fixed lg:static z-50 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300"
+      >
+        <div class="p-6 border-b border-slate-700 text-center">
+          <div
+            class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500"
+          >
+            <img src="files/logoSc.jpg" class="w-full h-full object-contain" />
+          </div>
+          <h1
+            class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight"
+          >
+            Jamia Tarbia Tul Banat Society
+          </h1>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2">
+          <a
+            href="dashboard.html"
+            class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-th-large"></i> Dashboard
+          </a>
+
+          <a
+            href="mainAdmission.html"
+            class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl"
+          >
+            <i class="fas fa-user-graduate"></i> Admissions
+          </a>
+
+          <a
+            href="main_StuAttendance.html"
+            class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-calendar-check"></i> Attendance
+          </a>
+
+          <a
+            href="mainfeeTransaction.html"
+            class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-receipt"></i> Fee Transactions
+          </a>
+
+          <a
+            href="mainBank.html"
+            class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-university"></i> Bank Accounts
+          </a>
+
+          <a
+            href="#"
+            class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"
+          >
+            <i class="fas fa-wallet"></i> School Expenses
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-700">
+          <button
+            onclick="logout()"
+            class="w-full p-3 bg-red-500/10 text-red-400 rounded-xl font-bold"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </aside>
+
+      <div
+        id="sidebar-overlay"
+        class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"
+      ></div>
+
+      <div class="flex-1 flex flex-col min-w-0">
+        <header
+          class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8"
+        >
+          <button
+            id="menu-btn"
+            class="lg:hidden p-2 mr-4 text-slate-600 hover:bg-slate-100 rounded-lg transition"
+          >
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <div class="flex-1 overflow-hidden">
+            <h2
+              class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase"
+            >
+              JAMIA TARBIA TUL BANAT SOCIETY JAJOR
+            </h2>
+            <p
+              class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest"
+            >
+              Admin Control Panel
+            </p>
+          </div>
+        </header>
+
+        <main class="p-6 md:p-12 flex items-center justify-center">
+          <div
+            class="w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-100"
+          >
+            <div class="text-center mb-10">
+              <div
+                class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-sm transform -rotate-3"
+              >
+                <i class="fas fa-user-plus text-3xl"></i>
+              </div>
+              <h3 class="text-3xl font-black text-slate-800">
+                Register Student
+              </h3>
+              <p class="text-slate-500 text-sm mt-2">
+                Create new login credentials for portal access
+              </p>
+            </div>
+
+            <form id="registrationForm" class="space-y-6">
+              <div class="space-y-1">
+                <label
+                  class="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-widest"
+                  >Student Email Address</label
+                >
+                <div class="relative">
+                  <i
+                    class="fas fa-envelope absolute left-4 top-4 text-slate-400"
+                  ></i>
+                  <input
+                    type="email"
+                    id="regEmail"
+                    placeholder="student@example.com"
+                    required
+                    class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label
+                  class="text-[10px] font-bold text-slate-400 uppercase ml-2 tracking-widest"
+                  >Assign Portal Password</label
+                >
+                <div class="relative">
+                  <i
+                    class="fas fa-key absolute left-4 top-4 text-slate-400"
+                  ></i>
+                  <input
+                    type="password"
+                    id="regPassword"
+                    placeholder="••••••••"
+                    required
+                    class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                  />
+                </div>
+                <p class="text-[9px] text-slate-400 italic ml-2">
+                  Note: Inform the student to keep this password safe.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                id="submitBtn"
+                class="w-full py-5 bg-slate-900 text-white rounded-3xl font-bold hover:bg-emerald-600 transition shadow-xl shadow-slate-200 uppercase tracking-[0.2em] text-sm flex items-center justify-center gap-3"
+              >
+                <span>Register Account</span>
+                <i class="fas fa-check-circle"></i>
+              </button>
+
+              <div class="pt-2">
+                <a
+                  href="admission_form.html"
+                  class="w-full block text-center py-4 border-2 border-emerald-500 text-emerald-600 rounded-3xl font-bold hover:bg-emerald-500 hover:text-white transition uppercase tracking-[0.2em] text-sm"
+                >
+                  Go to Admission Form
+                </a>
+              </div>
+            </form>
+
+            <div
+              id="msg"
+              class="mt-8 text-center hidden p-4 rounded-3xl font-bold text-sm shadow-inner transition-all duration-300"
+            ></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const API = "http://localhost:3000";
+
+      // --- SIDEBAR LOGIC ---
+      const menuBtn = document.getElementById("menu-btn");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("sidebar-overlay");
+
+      menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+
+      overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      // --- AUTH CHECK ---
+      const token = localStorage.getItem("adminToken");
+      const adminId = localStorage.getItem("adminId"); // ✅ NEW
+
+      if (!token) window.location.href = "login.html";
+
+      // --- REGISTRATION LOGIC ---
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("regEmail").value;
+          const password = document.getElementById("regPassword").value;
+
+          const msg = document.getElementById("msg");
+          const btn = document.getElementById("submitBtn");
+
+          msg.classList.add("hidden");
+          btn.disabled = true;
+          btn.innerHTML =
+            '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+          try {
+            const res = await fetch(`${API}/student/register`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                email,
+                password,
+                adminId: adminId, // ✅ SEND ADMIN ID
+              }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              msg.innerText = "Success: " + data.message;
+              msg.className =
+                "mt-8 text-center p-4 rounded-3xl font-bold text-sm bg-emerald-50 text-emerald-700 border border-emerald-100 block";
+              e.target.reset();
+            } else {
+              msg.innerText =
+                "Error: " + (data.message || "Registration failed");
+              msg.className =
+                "mt-8 text-center p-4 rounded-3xl font-bold text-sm bg-rose-50 text-rose-700 border border-rose-100 block";
+            }
+
+            msg.classList.remove("hidden");
+          } catch (err) {
+            msg.innerText = "Connection Failed. Is backend running?";
+            msg.className =
+              "mt-8 text-center p-4 rounded-3xl font-bold text-sm bg-rose-50 text-rose-700 border border-rose-100 block";
+            msg.classList.remove("hidden");
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML =
+              '<span>Register Account</span> <i class="fas fa-check-circle"></i>';
+          }
+        });
+
+      function logout() {
+        localStorage.clear();
+        window.location.href = "student_login.html";
+      }
+    </script>
+  </body>
+</html>

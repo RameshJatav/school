@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Jamia Tarbia Tul Banat Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .bg-login {
+            /* Yahan aap apni school ki photo ka path daal sakte hain */
+            background-image: url('school_bg.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans antialiased">
+
+    <div class="min-h-screen bg-login flex items-center justify-center p-4 relative">
+        <div class="absolute inset-0 bg-slate-900/60"></div>
+
+        <div class="relative z-10 w-full max-w-md">
+            <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden">
+                
+                <div class="p-8 text-center bg-white/50 border-b border-gray-200">
+                    <div class="w-20 h-20 bg-emerald-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg transform -rotate-3">
+                        <i class="fas fa-user-shield text-white text-3xl"></i>
+                    </div>
+                    <h1 class="text-xl font-black text-slate-800 uppercase tracking-tight leading-tight">
+                        Jamia Tarbia Tul Banat Society
+                    </h1>
+                    <p class="text-[10px] text-emerald-700 font-bold mt-1 tracking-widest uppercase">
+                        District Khairthal-Tijara | Admin Portal
+                    </p>
+                </div>
+
+                <div class="p-8">
+                    <form id="adminLoginForm" class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Admin Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" id="email" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-700"
+                                    placeholder="admin@example.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" id="password" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-slate-700"
+                                    placeholder="••••••••">
+                            </div>
+                        </div>
+
+                        <button type="submit" 
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-200 transition-all transform hover:scale-[1.01] active:scale-[0.98] flex items-center justify-center gap-3">
+                            <span>SIGN IN TO DASHBOARD</span>
+                            <i class="fas fa-arrow-right text-sm"></i>
+                        </button>
+                    </form>
+
+                    <div id="loginStatus" class="mt-6 hidden p-4 rounded-xl text-sm font-bold text-center"></div>
+                </div>
+
+                <div class="p-6 bg-slate-50/50 border-t border-gray-200 text-center">
+                    <p class="text-[10px] text-slate-400 font-medium">
+                        &copy; 2026 AmiTech Solutions. Managed for JTBS Society.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+ document.addEventListener('DOMContentLoaded', () => {
+
+    // ✅ Already login check
+    const token = localStorage.getItem('adminToken');
+    if(token){
+        window.location.href = 'dashboard.html';
+    }
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const statusDiv = document.getElementById('loginStatus');
+
+        statusDiv.classList.add('hidden');
+        statusDiv.className = "mt-6 p-4 rounded-xl text-sm font-bold text-center";
+
+        try {
+            const response = await fetch('http://localhost:3000/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+
+                // ✅ SAVE FULL ADMIN DATA
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminId', data.admin.id);
+                localStorage.setItem('adminName', data.admin.name);
+                localStorage.setItem('adminEmail', data.admin.email);
+
+                statusDiv.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Login Successful`;
+                statusDiv.classList.add('bg-green-100', 'text-green-700');
+                statusDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html'; 
+                }, 1000);
+
+            } else {
+                statusDiv.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i> ${data.message || 'Login Failed'}`;
+                statusDiv.classList.add('bg-red-100', 'text-red-700');
+                statusDiv.classList.remove('hidden');
+            }
+
+        } catch (error) {
+            statusDiv.innerHTML = `<i class="fas fa-wifi mr-2"></i> Server not responding`;
+            statusDiv.classList.add('bg-red-100', 'text-red-700');
+            statusDiv.classList.remove('hidden');
+        }
+    });
+
+    });
+</script>
+</body>
+</html>

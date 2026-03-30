@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | JTBS Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
+        .header-shadow { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+        .label { font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .value { font-weight: 700; color: #1e293b; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+<!-- Photo Modal -->
+<div id="photo-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4" onclick="closeModal()">
+    <button class="absolute top-5 right-5 text-white text-3xl"><i class="fas fa-times-circle"></i></button>
+    <img id="modal-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain border-4 border-white/10">
+</div>
+
+<div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed lg:static z-50 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <div class="p-6 border-b border-slate-700 text-center">
+            <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
+                <img src="files/logoSc.jpg" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">Jamia Tarbia Tul Banat Society</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="mainAdmission.html" class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl"><i class="fas fa-user-graduate"></i> Admissions</a>
+            <a href="main_StuAttendance.html" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"><i class="fas fa-calendar-check"></i> Attendance</a>
+            <a href="mainfeeTransaction.html" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"><i class="fas fa-receipt"></i> Fee Transactions</a>
+            <a href="mainBank.html" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"><i class="fas fa-university"></i> Bank Accounts</a>
+            <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-800 rounded-xl"><i class="fas fa-wallet"></i> School Expenses</a>
+        </nav>
+        <div class="p-4 border-t border-slate-700">
+            <button onclick="logout()" class="w-full p-3 bg-red-500/10 text-red-400 rounded-xl font-bold"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Header -->
+        <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
+            <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600"><i class="fas fa-bars text-xl"></i></button>
+            <div class="flex-1 overflow-hidden">
+                <h2 class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase">JAMIA TARBIA TUL BANAT SOCIETY JAJOR</h2>
+                <p class="text-[10px] text-slate-500 font-medium tracking-tight">DISTRICT KHAIRTHAL-TIJARA, RAJASTHAN</p>
+            </div>
+            <div class="flex items-center gap-3 pl-4 border-l border-slate-100 ml-4">
+                <div class="hidden md:block text-right text-xs">
+                    <p id="nav-student-name" class="font-bold text-slate-700">Loading...</p>
+                    <p class="text-emerald-600 font-bold uppercase mt-0.5">Student Portal</p>
+                </div>
+                <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-200">
+                    <i class="fas fa-graduation-cap text-emerald-600"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-4 md:p-8 max-w-6xl mx-auto w-full space-y-8">
+
+            <!-- Status & Photos -->
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <div id="status-banner" class="py-2 px-8 text-center text-[10px] font-black uppercase tracking-widest text-white">
+                    Admission Status: <span id="s-status">PENDING</span>
+                </div>
+                <div class="p-6 md:p-10 flex flex-col lg:flex-row gap-10">
+                    <div class="w-full lg:w-1/4">
+                        <img id="s-photo" onclick="openModal(this.src)" src="" class="img-preview w-full h-72 object-cover rounded-2xl shadow-md border-4 border-slate-50" alt="Student">
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <img id="f-photo" onclick="openModal(this.src)" src="" class="img-preview w-full h-20 object-cover rounded-lg bg-gray-100" title="Father">
+                            <img id="m-photo" onclick="openModal(this.src)" src="" class="img-preview w-full h-20 object-cover rounded-lg bg-gray-100" title="Mother">
+                        </div>
+                    </div>
+
+                    <div class="flex-1 space-y-6">
+                        <h3 class="text-4xl font-black text-slate-800 italic tracking-tight mb-1">
+                            <span id="s-fname"></span> <span id="s-lname"></span>
+                        </h3>
+                        <p class="text-emerald-600 font-bold mb-6 flex items-center gap-2"><i class="fas fa-envelope"></i> <span id="s-email"></span></p>
+
+                        <!-- Personal & Family Info -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm border-t border-slate-100 pt-6">
+                            <div><p class="label">DOB</p><p class="value" id="s-dob"></p></div>
+                            <div><p class="label">Blood Group</p><p class="value" id="s-blood"></p></div>
+                            <div><p class="label">Gender</p><p class="value" id="s-gender"></p></div>
+                            <div><p class="label">Class Applied</p><p class="value" id="s-class"></p></div>
+                            <div><p class="label">Session</p><p class="value" id="s-year"></p></div>
+                            <div><p class="label">City</p><p class="value" id="s-city"></p></div>
+                            <div><p class="label">State</p><p class="value" id="s-state"></p></div>
+                            <div><p class="label">Address</p><p class="value" id="s-address"></p></div>
+                            <div><p class="label">Category</p><p class="value" id="s-category"></p></div>
+                            <div><p class="label">Aadhar</p><p class="value" id="s-aadhar"></p></div>
+                        </div>
+
+                        <!-- Parents -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <p class="label mb-2">Father Details</p>
+                                <p class="value" id="f-name"></p>
+                                <p class="text-xs text-emerald-600 font-bold"><i class="fas fa-phone-alt mr-1"></i> <span id="f-mob"></span></p>
+                                <p class="text-xs text-slate-700"><i class="fas fa-briefcase mr-1"></i> <span id="f-occupation"></span></p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <p class="label mb-2">Mother Details</p>
+                                <p class="value" id="m-name"></p>
+                                <p class="text-xs text-emerald-600 font-bold"><i class="fas fa-phone-alt mr-1"></i> <span id="m-mob"></span></p>
+                                <p class="text-xs text-slate-700"><i class="fas fa-briefcase mr-1"></i> <span id="m-occupation"></span></p>
+                            </div>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <p class="label mb-2">Education Info</p>
+                                <p class="value">Previous School: <span id="s-prev-school"></span></p>
+                                <p class="value">Previous Class: <span id="s-prev-class"></span></p>
+                                <p class="value">Medium: <span id="s-medium"></span></p>
+                                <p class="value">Board: <span id="s-board"></span></p>
+                                <p class="value">Previous %: <span id="s-prev-percentage"></span></p>
+                                <p class="value">Remarks: <span id="s-remarks"></span></p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <p class="label mb-2">Promotion History</p>
+                                <p class="value" id="s-promotion"></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee Summary -->
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+                    <div>
+                        <p class="text-emerald-400 font-bold uppercase text-[10px] tracking-[0.2em] mb-1">Financial Overview</p>
+                        <h4 class="text-3xl font-light italic">Academic Dues Summary</h4>
+                        <p class="text-slate-400 text-xs mt-2 font-medium">Session: 2026-27 | Fee Status Verified</p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6 md:gap-12">
+                        <div class="text-center">
+                            <p class="text-3xl font-black">₹<span id="f-total"></span></p>
+                            <p class="text-[9px] text-slate-400 uppercase font-bold mt-1">Total Fees</p>
+                        </div>
+                        <div class="w-px h-12 bg-slate-700 hidden md:block"></div>
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-emerald-400">₹<span id="f-paid"></span></p>
+                            <p class="text-[9px] text-slate-400 uppercase font-bold mt-1">Fees Paid</p>
+                        </div>
+                        <div class="w-px h-12 bg-slate-700 hidden md:block"></div>
+                        <div class="text-center">
+                            <p class="text-3xl font-black text-rose-500">₹<span id="f-due"></span></p>
+                            <p class="text-[9px] text-slate-400 uppercase font-bold mt-1">Remaining Due</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-0 right-0 p-10 opacity-5"><i class="fas fa-wallet text-9xl"></i></div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+const UPLOAD_PATH = "http://localhost:3000/uploads/students/";
+
+// Sidebar Toggle
+document.getElementById('menu-btn').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('-translate-x-full');
+});
+
+// Modal Logic
+function openModal(src) {
+    if (!src || src.includes('placeholder')) return;
+    document.getElementById('modal-img').src = src;
+    document.getElementById('photo-modal').classList.remove('hidden');
+}
+function closeModal() {
+    document.getElementById('photo-modal').classList.add('hidden');
+}
+
+// Load Student Data
+document.addEventListener('DOMContentLoaded', () => {
+    const dataString = sessionStorage.getItem('tempStudentData');
+    if (!dataString) { window.location.href = 'student_login.html'; return; }
+    const s = JSON.parse(dataString);
+    const cleanPath = (p) => p ? p.split('\\').pop() : '';
+
+    // Personal Info
+    document.getElementById('nav-student-name').innerText = s.first_name + " " + s.last_name;
+    document.getElementById('s-fname').innerText = s.first_name;
+    document.getElementById('s-lname').innerText = s.last_name;
+    document.getElementById('s-email').innerText = s.email;
+    document.getElementById('s-dob').innerText = new Date(s.date_of_birth).toLocaleDateString();
+    document.getElementById('s-blood').innerText = s.blood_group;
+    document.getElementById('s-gender').innerText = s.gender;
+    document.getElementById('s-class').innerText = "Class " + s.class_applied;
+    document.getElementById('s-year').innerText = s.admission_year;
+    document.getElementById('s-city').innerText = s.city;
+    document.getElementById('s-state').innerText = s.state;
+    document.getElementById('s-address').innerText = s.address_line1 + ", " + s.address_line2;
+    document.getElementById('s-category').innerText = s.category;
+    document.getElementById('s-aadhar').innerText = s.aadhar_no;
+
+    // Parents
+    document.getElementById('f-name').innerText = s.father_name;
+    document.getElementById('f-mob').innerText = s.father_mobile;
+    document.getElementById('f-occupation').innerText = s.father_occupation;
+    document.getElementById('m-name').innerText = s.mother_name;
+    document.getElementById('m-mob').innerText = s.mother_mobile;
+    document.getElementById('m-occupation').innerText = s.mother_occupation;
+
+    // Education & Promotion
+    document.getElementById('s-prev-school').innerText = s.previous_school_name;
+    document.getElementById('s-prev-class').innerText = s.previous_class;
+    document.getElementById('s-medium').innerText = s.medium;
+    document.getElementById('s-board').innerText = s.board;
+    document.getElementById('s-prev-percentage').innerText = s.previous_percentage;
+    document.getElementById('s-remarks').innerText = s.remarks;
+    document.getElementById('s-promotion').innerText = s.promotion_history;
+
+    // Fees
+    document.getElementById('f-total').innerText = s.total_fees;
+    document.getElementById('f-paid').innerText = s.fees_paid;
+    document.getElementById('f-due').innerText = s.fees_due;
+
+    // Photos
+    document.getElementById('s-photo').src = s.student_photo ? UPLOAD_PATH + cleanPath(s.student_photo) : 'https://via.placeholder.com/300';
+    document.getElementById('f-photo').src = s.father_photo ? UPLOAD_PATH + cleanPath(s.father_photo) : 'https://via.placeholder.com/150';
+    document.getElementById('m-photo').src = s.mother_photo ? UPLOAD_PATH + cleanPath(s.mother_photo) : 'https://via.placeholder.com/150';
+
+    // Status Banner
+    const banner = document.getElementById('status-banner');
+    document.getElementById('s-status').innerText = s.status;
+    banner.classList.remove('bg-emerald-600','bg-rose-600','bg-amber-500');
+    if(s.status === 'approved') banner.classList.add('bg-emerald-600');
+    else if(s.status === 'rejected') banner.classList.add('bg-rose-600');
+    else banner.classList.add('bg-amber-500');
+});
+
+// Logout
+function logout() {
+    sessionStorage.clear();
+    window.location.href = 'student_login.html';
+}
+</script>
+</body>
+</html>
