@@ -1,265 +1,328 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Admission | JTBS Society</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Admission | JTBS Society</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    }
 
-        .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
-        .header-shadow { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-
-</style>
+    .header-shadow {
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    }
+  </style>
 </head>
+
 <body class="bg-gray-50 font-sans antialiased">
 
-<div class="min-h-screen flex">
-    <aside id="sidebar" class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
-        <div class="p-6 border-b border-slate-700 text-center">
-            <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
-                <img src="./files/logoSc.jpg" alt="Society Logo" class="w-full h-full object-contain">
-            </div>
-            <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">
-                Jamia Tarbia Tul Banat Society
-            </h1>
+  <div class="min-h-screen flex">
+    <aside id="sidebar"
+      class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+      <div class="p-6 border-b border-slate-700 text-center">
+        <div class="w-20 h-20 mx-auto mb-3 bg-white rounded-full p-1 overflow-hidden border-2 border-emerald-500">
+          <img src="./files/logoSc.jpg" alt="Society Logo" class="w-full h-full object-contain">
         </div>
+        <h1 class="text-xs font-bold text-emerald-400 uppercase tracking-widest leading-tight">
+          Jamia Tarbia Tul Banat Society
+        </h1>
+      </div>
 
-        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            <a href="dashboard.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl transition">
-                <i class="fas fa-th-large w-5"></i> Dashboard
-            </a>
-            <a href="mainAdmission.html" class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl text-white font-medium shadow-lg shadow-emerald-900/20">
-                <i class="fas fa-user-graduate w-5"></i> Admissions
-            </a>
-            <a href="main_StuAttendance.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
-                <i class="fas fa-calendar-check w-5"></i> Attendance
-            </a>
-            <a href="mainfeeTransaction.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
-                <i class="fas fa-receipt w-5"></i> Fee Transactions
-            </a>
-            <a href="mainBank.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
-                <i class="fas fa-university w-5"></i> Bank Accounts
-            </a>
-            <a href="expenseMain.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
-                <i class="fas fa-wallet w-5"></i> School Expenses
-            </a>
-        </nav>
+      <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <a href="dashboard.html"
+          class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl transition">
+          <i class="fas fa-th-large w-5"></i> Dashboard
+        </a>
+        <a href="mainAdmission.html"
+          class="flex items-center gap-3 p-3 bg-emerald-600 rounded-xl text-white font-medium shadow-lg shadow-emerald-900/20">
+          <i class="fas fa-user-graduate w-5"></i> Admissions
+        </a>
+        <a href="main_StuAttendance.html"
+          class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+          <i class="fas fa-calendar-check w-5"></i> Attendance
+        </a>
+        <a href="mainfeeTransaction.html"
+          class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+          <i class="fas fa-receipt w-5"></i> Fee Transactions
+        </a>
+        <a href="mainBank.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+          <i class="fas fa-university w-5"></i> Bank Accounts
+        </a>
+        <a href="expenseMain.html" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-800 rounded-xl">
+          <i class="fas fa-wallet w-5"></i> School Expenses
+        </a>
+      </nav>
 
-        <div class="p-4 border-t border-slate-700">
-            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
+      <div class="p-4 border-t border-slate-700">
+        <button onclick="logout()"
+          class="w-full flex items-center justify-center gap-2 p-3 bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white rounded-xl font-bold transition">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
     </aside>
 
     <div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
 
-  <div class="flex-1 flex flex-col min-w-0">
-    <!-- Header -->
-    <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
-      <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600"><i class="fas fa-bars text-xl"></i></button>
-      <div class="flex-1 overflow-hidden">
-        <h2 class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase">JAMIA TARBIA TUL BANAT SOCIETY JAJOR</h2>
-        <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Student Admission Form 2026</p>
-      </div>
-    </header>
-
-    <!-- Main Form -->
-    <main class="p-4 md:p-8">
-      <form id="admissionForm" class="max-w-6xl mx-auto space-y-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
-        
-        <!-- Hidden / System Fields -->
-        <input type="hidden" name="admin_id" value="1">
-        <input type="hidden" name="status" value="active">
-        <input type="hidden" name="admission_year" value="2026">
-        <input type="hidden" name="academic_year" value="2026-27">
-
-        <!-- Personal Information -->
-        <section>
-          <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2 border-b pb-2">
-            <i class="fas fa-user-graduate text-emerald-500"></i> Personal Information
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div><label class="label-text">Email</label><input type="email" id="student_email" name="email" required class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">First Name</label><input type="text" name="first_name" required class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">Last Name</label><input type="text" name="last_name" required class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">Date of Birth</label><input type="date" name="date_of_birth" class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">Gender</label>
-              <select name="gender" class="w-full p-3 bg-slate-50 border border-slate-200">
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div><label class="label-text">Blood Group</label>
-              <select name="blood_group" class="w-full p-3 bg-slate-50 border border-slate-200">
-                <option>O+</option><option>A+</option><option>B+</option><option>AB+</option><option>O-</option>
-              </select>
-            </div>
-            <div><label class="label-text">Aadhaar Number</label><input type="text" name="aadhar_no" maxlength="12" class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">Category / Caste</label><input type="text" name="category" class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-            <div><label class="label-text">Admission Date</label><input type="date" name="admission_date" class="w-full p-3 bg-slate-50 border border-slate-200"></div>
-          </div>
-        </section>
-
-        <!-- Family Details -->
-        <section>
-          <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2 border-b pb-2">
-            <i class="fas fa-users text-emerald-500"></i> Family Details
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div><label class="label-text">Father Name</label><input type="text" name="father_name" placeholder="Father Name" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Father Mobile</label><input type="text" name="father_mobile" placeholder="Father Mobile" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Father Occupation</label><input type="text" name="father_occupation" placeholder="Father Occupation" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Mother Name</label><input type="text" name="mother_name" placeholder="Mother Name" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Mother Mobile</label><input type="text" name="mother_mobile" placeholder="Mother Mobile" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Mother Occupation</label><input type="text" name="mother_occupation" placeholder="Mother Occupation" class="w-full p-3 border border-slate-200"></div>
-          </div>
-        </section>
-
-        <!-- Documents & Uploads -->
-        <section class="bg-slate-50 p-6 rounded-3xl">
-          <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
-            <i class="fas fa-camera text-emerald-500"></i> Documents & Uploads
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div><label class="label-text">Student Photo</label><input type="file" name="student_photo"></div>
-            <div><label class="label-text">Father Photo</label><input type="file" name="father_photo"></div>
-            <div><label class="label-text">Mother Photo</label><input type="file" name="mother_photo"></div>
-            <div><label class="label-text">Student Signature</label><input type="file" name="signature"></div>
-          </div>
-        </section>
-
-        <!-- Education Info -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div class="space-y-4">
-            <h4 class="font-bold text-slate-700 flex items-center gap-2"><i class="fas fa-book text-emerald-500"></i> Education Info</h4>
-            <div class="grid grid-cols-2 gap-4">
-              <div><label class="label-text">Class Applied</label><input type="number" name="class_applied" placeholder="Applying Class" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">Previous % / Grade</label><input type="text" name="previous_percentage" placeholder="Previous % / Grade" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">Medium</label><input type="text" name="medium" placeholder="Medium" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">Board</label><input type="text" name="board" placeholder="Board" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">Previous School</label><input type="text" name="previous_school_name" placeholder="Previous School" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">Previous Class</label><input type="text" name="previous_class" placeholder="Previous Class" class="w-full p-3 border border-slate-200"></div>
-            </div>
-            <div><label class="label-text">Remarks</label><textarea name="remarks" placeholder="Remarks" class="w-full p-3 border border-slate-200 h-24"></textarea></div>
-          </div>
-
-          <!-- Address Details -->
-          <div class="space-y-4">
-            <h4 class="font-bold text-slate-700 flex items-center gap-2"><i class="fas fa-map-marked-alt text-emerald-500"></i> Address Details</h4>
-            <div><label class="label-text">Address Line 1</label><input type="text" name="address_line1" placeholder="Address Line 1" class="w-full p-3 border border-slate-200"></div>
-            <div><label class="label-text">Address Line 2</label><input type="text" name="address_line2" placeholder="Address Line 2" class="w-full p-3 border border-slate-200"></div>
-            <div class="grid grid-cols-2 gap-4">
-              <div><label class="label-text">City</label><input type="text" name="city" placeholder="City" class="w-full p-3 border border-slate-200"></div>
-              <div><label class="label-text">State</label><input type="text" name="state" placeholder="State" class="w-full p-3 border border-slate-200"></div>
-            </div>
-            <div><label class="label-text">Pincode</label><input type="text" name="pincode" placeholder="Pincode" class="w-full p-3 border border-slate-200"></div>
-          </div>
-        </section>
-
-        <!-- Fee Management -->
-        <section class="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h3 class="text-2xl font-light italic">Fee Management</h3>
-              <p class="text-slate-400 text-xs mt-1 uppercase tracking-widest font-bold">Session 2026-27</p>
-            </div>
-            <div class="grid grid-cols-3 gap-4">
-              <div><label class="label-text">Total Fees</label><input type="number" name="total_fees" id="totalFees" placeholder="Total Fees" class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white"></div>
-              <div><label class="label-text">Fees Paid</label><input type="number" name="fees_paid" id="feesPaid" placeholder="Fees Paid" class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white"></div>
-              <div><label class="label-text">Fees Due</label><input type="number" name="fees_due" id="feesDue" placeholder="Fees Due" readonly class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Promotion History -->
-        <section>
-          <h3 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
-            <i class="fas fa-history text-emerald-500"></i> Promotion History
-          </h3>
-          <div><label class="label-text">Promotion History Details</label><textarea name="promotion_history" class="w-full p-3 border border-slate-200 h-24"></textarea></div>
-        </section>
-
-        <div class="text-center pt-6">
-          <button type="submit" id="submitBtn" class="w-full md:w-96 py-5 bg-emerald-600 text-white rounded-3xl font-black shadow-xl hover:bg-emerald-700 transition uppercase tracking-[0.2em] text-sm">
-            Confirm Admission
-          </button>
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Header -->
+      <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
+        <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600"><i class="fas fa-bars text-xl"></i></button>
+        <div class="flex-1 overflow-hidden">
+          <h2 class="text-sm md:text-lg font-bold text-slate-800 truncate uppercase">JAMIA TARBIA TUL BANAT SOCIETY
+            JAJOR</h2>
+          <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">Student Admission Form 2026</p>
         </div>
-      </form>
+      </header>
 
-      <div id="msg" class="mt-8 text-center hidden p-4 rounded-3xl font-bold transition-all"></div>
-    </main>
+      <!-- Main Form -->
+      <main class="p-4 md:p-8">
+        <form id="admissionForm"
+          class="max-w-6xl mx-auto space-y-8 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
+
+          <!-- Hidden / System Fields -->
+          <input type="hidden" name="admin_id" value="1">
+          <input type="hidden" name="status" value="active">
+          <input type="hidden" name="admission_year" value="2026">
+          <input type="hidden" name="academic_year" value="2026-27">
+
+          <!-- Personal Information -->
+          <section>
+            <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2 border-b pb-2">
+              <i class="fas fa-user-graduate text-emerald-500"></i> Personal Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div><label class="label-text">Email</label><input type="email" id="student_email" name="email" required
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+              <div><label class="label-text">First Name</label><input type="text" name="first_name" required
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+              <div><label class="label-text">Last Name</label><input type="text" name="last_name" required
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+              <div><label class="label-text">Date of Birth</label><input type="date" name="date_of_birth"
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+              <div><label class="label-text">Gender</label>
+                <select name="gender" class="w-full p-3 bg-slate-50 border border-slate-200">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div><label class="label-text">Blood Group</label>
+                <select name="blood_group" class="w-full p-3 bg-slate-50 border border-slate-200">
+                  <option>O+</option>
+                  <option>A+</option>
+                  <option>B+</option>
+                  <option>AB+</option>
+                  <option>O-</option>
+                </select>
+              </div>
+              <div><label class="label-text">Aadhaar Number</label><input type="text" name="aadhar_no" maxlength="12"
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+              <!-- <div><label class="label-text">Category / Caste</label><input type="text" name="category" class="w-full p-3 bg-slate-50 border border-slate-200"></div> -->
+              <div>
+                <label class="label-text">Category / Caste</label>
+                <select name="category" class="w-full p-3 bg-slate-50 border border-slate-200">
+                  <option value="">Select Category</option>
+                  <option value="General">General</option>
+                  <option value="OBC">OBC</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
+                  <option value="EWS">EWS</option>
+                </select>
+              </div>
+              <div><label class="label-text">Admission Date</label><input type="date" name="admission_date"
+                  class="w-full p-3 bg-slate-50 border border-slate-200"></div>
+            </div>
+          </section>
+
+          <!-- Family Details -->
+          <section>
+            <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2 border-b pb-2">
+              <i class="fas fa-users text-emerald-500"></i> Family Details
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div><label class="label-text">Father Name</label><input type="text" name="father_name"
+                  placeholder="Father Name" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Father Mobile</label><input type="text" name="father_mobile"
+                  placeholder="Father Mobile" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Father Occupation</label><input type="text" name="father_occupation"
+                  placeholder="Father Occupation" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Mother Name</label><input type="text" name="mother_name"
+                  placeholder="Mother Name" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Mother Mobile</label><input type="text" name="mother_mobile"
+                  placeholder="Mother Mobile" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Mother Occupation</label><input type="text" name="mother_occupation"
+                  placeholder="Mother Occupation" class="w-full p-3 border border-slate-200"></div>
+            </div>
+          </section>
+
+          <!-- Documents & Uploads -->
+          <section class="bg-slate-50 p-6 rounded-3xl">
+            <h3 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
+              <i class="fas fa-camera text-emerald-500"></i> Documents & Uploads
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div><label class="label-text">Student Photo</label><input type="file" name="student_photo"></div>
+              <div><label class="label-text">Father Photo</label><input type="file" name="father_photo"></div>
+              <div><label class="label-text">Mother Photo</label><input type="file" name="mother_photo"></div>
+              <div><label class="label-text">Student Signature</label><input type="file" name="signature"></div>
+            </div>
+          </section>
+
+          <!-- Education Info -->
+          <section class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="space-y-4">
+              <h4 class="font-bold text-slate-700 flex items-center gap-2"><i class="fas fa-book text-emerald-500"></i>
+                Education Info</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div><label class="label-text">Class Applied</label><input type="number" name="class_applied"
+                    placeholder="Applying Class" class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">Previous % / Grade</label><input type="text" name="previous_percentage"
+                    placeholder="Previous % / Grade" class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">Medium</label><input type="text" name="medium" placeholder="Medium"
+                    class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">Board</label><input type="text" name="board" placeholder="Board"
+                    class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">Previous School</label><input type="text" name="previous_school_name"
+                    placeholder="Previous School" class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">Previous Class</label><input type="text" name="previous_class"
+                    placeholder="Previous Class" class="w-full p-3 border border-slate-200"></div>
+              </div>
+              <div><label class="label-text">Remarks</label><textarea name="remarks" placeholder="Remarks"
+                  class="w-full p-3 border border-slate-200 h-24"></textarea></div>
+            </div>
+
+            <!-- Address Details -->
+            <div class="space-y-4">
+              <h4 class="font-bold text-slate-700 flex items-center gap-2"><i
+                  class="fas fa-map-marked-alt text-emerald-500"></i> Address Details</h4>
+              <div><label class="label-text">Address Line 1</label><input type="text" name="address_line1"
+                  placeholder="Address Line 1" class="w-full p-3 border border-slate-200"></div>
+              <div><label class="label-text">Address Line 2</label><input type="text" name="address_line2"
+                  placeholder="Address Line 2" class="w-full p-3 border border-slate-200"></div>
+              <div class="grid grid-cols-2 gap-4">
+                <div><label class="label-text">City</label><input type="text" name="city" placeholder="City"
+                    class="w-full p-3 border border-slate-200"></div>
+                <div><label class="label-text">State</label><input type="text" name="state" placeholder="State"
+                    class="w-full p-3 border border-slate-200"></div>
+              </div>
+              <div><label class="label-text">Pincode</label><input type="text" name="pincode" placeholder="Pincode"
+                  class="w-full p-3 border border-slate-200"></div>
+            </div>
+          </section>
+
+          <!-- Fee Management -->
+          <section class="bg-slate-900 p-8 rounded-[2.5rem] text-white">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 class="text-2xl font-light italic">Fee Management</h3>
+                <p class="text-slate-400 text-xs mt-1 uppercase tracking-widest font-bold">Session 2026-27</p>
+              </div>
+              <div class="grid grid-cols-3 gap-4">
+                <div><label class="label-text">Total Fees</label><input type="number" name="total_fees" id="totalFees"
+                    placeholder="Total Fees"
+                    class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white"></div>
+                <div><label class="label-text">Fees Paid</label><input type="number" name="fees_paid" id="feesPaid"
+                    placeholder="Fees Paid" class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white">
+                </div>
+                <div><label class="label-text">Fees Due</label><input type="number" name="fees_due" id="feesDue"
+                    placeholder="Fees Due" readonly
+                    class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Promotion History -->
+          <section>
+            <h3 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
+              <i class="fas fa-history text-emerald-500"></i> Promotion History
+            </h3>
+            <div><label class="label-text">Promotion History Details</label><textarea name="promotion_history"
+                class="w-full p-3 border border-slate-200 h-24"></textarea></div>
+          </section>
+
+          <div class="text-center pt-6">
+            <button type="submit" id="submitBtn"
+              class="w-full md:w-96 py-5 bg-emerald-600 text-white rounded-3xl font-black shadow-xl hover:bg-emerald-700 transition uppercase tracking-[0.2em] text-sm">
+              Confirm Admission
+            </button>
+          </div>
+        </form>
+
+        <div id="msg" class="mt-8 text-center hidden p-4 rounded-3xl font-bold transition-all"></div>
+      </main>
+    </div>
   </div>
-</div>
 
-<script>
-const API = "http://localhost:3000/studentAdmission/apply";
+  <script>
+    const API = "http://localhost:3000/studentAdmission/apply";
 
-// Prefill email from sessionStorage
-document.addEventListener('DOMContentLoaded', () => {
-    const savedEmail = sessionStorage.getItem('userEmail');
-    if (savedEmail) document.getElementById('student_email').value = savedEmail;
-});
+    // Prefill email from sessionStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedEmail = sessionStorage.getItem('userEmail');
+      if (savedEmail) document.getElementById('student_email').value = savedEmail;
+    });
 
-// Fees auto-calc
-function calcFees() {
-    let total = parseFloat(document.getElementById('totalFees').value) || 0;
-    let paid = parseFloat(document.getElementById('feesPaid').value) || 0;
-    document.getElementById('feesDue').value = total - paid;
-}
-document.getElementById('totalFees').addEventListener('input', calcFees);
-document.getElementById('feesPaid').addEventListener('input', calcFees);
+    // Fees auto-calc
+    function calcFees() {
+      let total = parseFloat(document.getElementById('totalFees').value) || 0;
+      let paid = parseFloat(document.getElementById('feesPaid').value) || 0;
+      document.getElementById('feesDue').value = total - paid;
+    }
+    document.getElementById('totalFees').addEventListener('input', calcFees);
+    document.getElementById('feesPaid').addEventListener('input', calcFees);
 
-// Form submit
-document.getElementById('admissionForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const msg = document.getElementById('msg');
-    const btn = document.getElementById('submitBtn');
-    const formData = new FormData(e.target);
+    // Form submit
+    document.getElementById('admissionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('msg');
+      const btn = document.getElementById('submitBtn');
+      const formData = new FormData(e.target);
 
-    msg.classList.add('hidden');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      msg.classList.add('hidden');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
-    try {
+      try {
         const res = await fetch(API, { method: 'POST', body: formData });
         const result = await res.json();
-        if(res.ok){
-            msg.innerHTML = `<div class="flex flex-col items-center gap-2"><i class="fas fa-check-circle text-2xl"></i><span>ADMISSION SUCCESSFUL</span><p class="text-lg font-black tracking-[0.2em]">REG NO: ${result.registration_no}</p></div>`;
-            msg.className = "mt-8 text-center p-6 rounded-[2rem] font-bold bg-emerald-50 text-emerald-700 border-2 border-emerald-100 block";
-            e.target.reset();
-            const savedEmail = sessionStorage.getItem('userEmail');
-            if (savedEmail) document.getElementById('student_email').value = savedEmail;
+        if (res.ok) {
+          msg.innerHTML = `<div class="flex flex-col items-center gap-2"><i class="fas fa-check-circle text-2xl"></i><span>ADMISSION SUCCESSFUL</span><p class="text-lg font-black tracking-[0.2em]">REG NO: ${result.registration_no}</p></div>`;
+          msg.className = "mt-8 text-center p-6 rounded-[2rem] font-bold bg-emerald-50 text-emerald-700 border-2 border-emerald-100 block";
+          e.target.reset();
+          const savedEmail = sessionStorage.getItem('userEmail');
+          if (savedEmail) document.getElementById('student_email').value = savedEmail;
         } else {
-            msg.innerText = "ERROR: " + (result.message || "Something went wrong");
-            msg.className = "mt-8 text-center p-4 rounded-2xl font-bold bg-rose-50 text-rose-700 border border-rose-100 block";
+          msg.innerText = "ERROR: " + (result.message || "Something went wrong");
+          msg.className = "mt-8 text-center p-4 rounded-2xl font-bold bg-rose-50 text-rose-700 border border-rose-100 block";
         }
-    } catch(err){
+      } catch (err) {
         msg.innerText = "Connection Failed. Is the server running?";
         msg.className = "mt-8 text-center p-4 rounded-2xl font-bold bg-rose-50 text-rose-700 block";
-    } finally {
+      } finally {
         btn.disabled = false;
         btn.innerHTML = "Confirm Admission";
-    }
-});
+      }
+    });
 
-// Sidebar Toggle (FIXED)
-const menuBtn = document.getElementById("menu-btn");
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
+    // Sidebar Toggle (FIXED)
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
 
-menuBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("-translate-x-full");
-    overlay.classList.toggle("hidden");
-});
+    menuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("-translate-x-full");
+      overlay.classList.toggle("hidden");
+    });
 
-overlay.addEventListener("click", () => {
-    sidebar.classList.add("-translate-x-full");
-    overlay.classList.add("hidden");
-});
-</script>
+    overlay.addEventListener("click", () => {
+      sidebar.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    });
+  </script>
 </body>
+
 </html>
