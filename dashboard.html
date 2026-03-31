@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 1. Fetch Students to count Registered, Active, and Pending
             // Note: Admin ID is hardcoded here for current session context as per your model
             const adminId = localStorage.getItem('adminId'); 
-            const studentRes = await fetch(`http://localhost:3000/studentAdmission/allstudents/get?admin_id=${adminId}`, {
+            const studentRes = await fetch(`https://jgqw00mq-3000.inc1.devtunnels.ms/studentAdmission/allstudents/get?admin_id=${adminId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const studentData = await studentRes.json();
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // 2. Fetch Transactions count (Based on your fee_Tr_Controller)
             // Assuming you have a route to get all, or using existing fetch for classwise and aggregating
-            const transactionRes = await fetch(`http://localhost:3000/feeManagement/get`, {
+            const transactionRes = await fetch(`https://jgqw00mq-3000.inc1.devtunnels.ms/feeManagement/get`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const transData = await transactionRes.json();
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Admin Profile Logic
     async function loadProfile() {
         try {
-            const res = await fetch('http://localhost:3000/admin/profile', {
+            const res = await fetch('https://jgqw00mq-3000.inc1.devtunnels.ms/admin/profile', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ✅ SECOND: fetch latest from backend
     try {
-        const res = await fetch('http://localhost:3000/admin/profile', {
+        const res = await fetch('https://jgqw00mq-3000.inc1.devtunnels.ms/admin/profile', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
