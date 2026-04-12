@@ -1,56 +1,138 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <title>Table Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-2 sm:p-4">
 
-<!-- 🔐 Login Screen -->
-<div id="loginBox" class="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
-  <h2 class="text-xl font-bold mb-4">🔐 Enter Password</h2>
-  
-  <input id="passwordInput" type="password" placeholder="Enter password"
-    class="w-full border p-2 rounded mb-3"/>
+<!-- 🔐 LOGIN -->
+<div id="loginBox" class="bg-white p-5 sm:p-6 rounded-xl shadow-lg w-full max-w-sm text-center">
 
-  <button onclick="checkPassword()" 
-    class="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">
+  <h2 class="text-xl font-bold mb-4">🔐 Admin Login</h2>
+
+  <input id="passwordInput" type="password"
+    class="w-full border p-2 rounded mb-3"
+    placeholder="Enter password"/>
+
+  <button onclick="checkPassword()"
+    class="bg-blue-500 text-white w-full py-2 rounded">
     Unlock
   </button>
 
-  <p id="loginError" class="text-red-500 mt-2 text-sm"></p>
+  <p id="loginError" class="text-red-500 text-sm mt-2"></p>
+
 </div>
 
-<!-- 🔥 Main Panel -->
-<div id="mainPanel" class="hidden bg-white shadow-xl rounded-2xl w-full max-w-2xl p-6">
-  
-  <h1 class="text-2xl font-bold text-center mb-4">🗂 Table Manager</h1>
+<!-- 🔥 MAIN PANEL -->
+<div id="mainPanel" class="hidden bg-white shadow-xl rounded-2xl w-full max-w-3xl p-4 sm:p-6">
 
-  <div class="flex justify-between mb-3">
-    <label class="flex items-center gap-2">
+  <h1 class="text-xl sm:text-2xl font-bold text-center mb-4">
+    🗂 Database Table Manager
+  </h1>
+
+  <div class="flex flex-col sm:flex-row sm:justify-between gap-2 mb-3">
+
+    <label class="flex items-center gap-2 text-sm sm:text-base">
       <input type="checkbox" onclick="selectAll(this)">
       Select All
     </label>
 
-    <button onclick="loadTables()" class="text-sm bg-blue-500 text-white px-2 py-1 rounded">
+    <button onclick="loadTables()"
+      class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
       Refresh
     </button>
+
   </div>
 
-  <div id="tables" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-3 rounded"></div>
+  <!-- TABLE LIST -->
+  <div id="tables"
+    class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto border p-3 rounded bg-gray-50">
+  </div>
 
-  <button onclick="truncateTables()" 
-    class="w-full mt-4 bg-red-500 text-white py-2 rounded hover:bg-red-600">
-    ⚠️ Truncate Selected
+  <!-- DELETE BUTTON -->
+  <button onclick="truncateTables()"
+    class="w-full mt-4 bg-red-500 hover:bg-red-600 text-white py-2 rounded">
+    ⚠️ Truncate Selected Tables
   </button>
 
-  <p id="status" class="text-center mt-3 text-sm"></p>
+  <p id="status" class="text-center text-sm mt-3"></p>
+
+</div>
+
+<!-- ⚠️ CONFIRM MODAL -->
+<div id="confirmModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3">
+
+  <div class="bg-white p-5 rounded-xl w-full max-w-sm text-center">
+
+    <h2 class="text-lg font-bold mb-2">⚠️ Confirm Action</h2>
+
+    <!-- TIMER -->
+    <p id="timerText" class="text-red-500 text-3xl font-bold mb-2">10</p>
+
+    <p class="text-sm text-gray-600 mb-4">
+      Wait for countdown to finish
+    </p>
+
+    <div class="flex gap-2 justify-center">
+
+      <button onclick="cancelAction()"
+        class="bg-gray-400 text-white px-3 py-1 rounded">
+        Cancel
+      </button>
+
+      <button onclick="continueAction()"
+        class="bg-red-500 text-white px-3 py-1 rounded disabled:opacity-50">
+        Continue
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- 🔐 PASSWORD MODAL -->
+<div id="passwordModal"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3">
+
+  <div class="bg-white p-5 rounded-xl w-full max-w-sm text-center">
+
+    <h2 class="text-lg font-bold mb-3">🔐 Re-enter Password</h2>
+
+    <input id="rePasswordInput" type="password"
+      class="w-full border p-2 rounded mb-3"
+      placeholder="Enter password again">
+
+    <div class="flex gap-2 justify-center">
+
+      <button onclick="closePasswordModal()"
+        class="bg-gray-400 text-white px-3 py-1 rounded">
+        Cancel
+      </button>
+
+      <button onclick="verifyPasswordAndRun()"
+        class="bg-blue-500 text-white px-3 py-1 rounded">
+        Verify
+      </button>
+
+    </div>
+
+    <p id="pwError" class="text-red-500 text-sm mt-2"></p>
+
+  </div>
 </div>
 
 <script>
-let savedPassword = "";
 
-// 🔐 Secure password check (backend verify)
+let savedPassword = "";
+let pendingTables = [];
+let allowContinue = false;
+let countdownInterval;
+
+// 🔐 LOGIN VERIFY
 async function checkPassword() {
   const pass = document.getElementById("passwordInput").value;
 
@@ -59,38 +141,30 @@ async function checkPassword() {
     return;
   }
 
-  try {
-    const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/verify-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ password: pass })
-    });
+  const res = await fetch("http://localhost:3000/verify-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: pass })
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (!res.ok) {
-      document.getElementById("loginError").innerText = data.message;
-      return;
-    }
-
-    // ✅ correct password
-    savedPassword = pass;
-
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("mainPanel").classList.remove("hidden");
-
-    loadTables();
-
-  } catch (err) {
-    document.getElementById("loginError").innerText = "Server error";
+  if (!res.ok) {
+    document.getElementById("loginError").innerText = data.message;
+    return;
   }
+
+  savedPassword = pass;
+
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("mainPanel").classList.remove("hidden");
+
+  loadTables();
 }
 
-// Load tables
+// 📦 LOAD TABLES
 async function loadTables() {
-  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/tables");
+  const res = await fetch("http://localhost:3000/tables");
   const data = await res.json();
 
   const container = document.getElementById("tables");
@@ -98,7 +172,7 @@ async function loadTables() {
 
   data.tables.forEach(table => {
     container.innerHTML += `
-      <label class="flex items-center gap-2 bg-gray-50 p-2 rounded hover:bg-gray-100 cursor-pointer">
+      <label class="flex items-center gap-2 bg-white p-2 rounded hover:bg-gray-100 cursor-pointer text-sm">
         <input type="checkbox" value="${table}">
         ${table}
       </label>
@@ -106,39 +180,131 @@ async function loadTables() {
   });
 }
 
-// Select all
+// SELECT ALL
 function selectAll(source) {
   document.querySelectorAll("#tables input")
     .forEach(cb => cb.checked = source.checked);
 }
 
-// Truncate
-async function truncateTables() {
+// 🚀 TRUNCATE CLICK
+function truncateTables() {
   const selected = Array.from(document.querySelectorAll("#tables input:checked"))
-                        .map(cb => cb.value);
+    .map(cb => cb.value);
 
-  if (selected.length === 0) {
-    alert("Select at least one table");
+  if (selected.length === 0) return;
+
+  pendingTables = selected;
+  allowContinue = false;
+
+  document.getElementById("confirmModal").classList.remove("hidden");
+
+  startCountdown(10);
+}
+
+// ⏳ COUNTDOWN
+function startCountdown(sec) {
+  let time = sec;
+
+  allowContinue = false;
+
+  const timerEl = document.getElementById("timerText");
+  const continueBtn = document.querySelector("#confirmModal button:nth-child(2)");
+
+  continueBtn.disabled = true;
+
+  timerEl.innerText = time;
+
+  clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(() => {
+    time--;
+
+    if (time <= 0) {
+      clearInterval(countdownInterval);
+
+      allowContinue = true;
+      timerEl.innerText = "Ready ✅";
+
+      continueBtn.disabled = false;
+
+      return;
+    }
+
+    timerEl.innerText = time;
+
+  }, 1000);
+}
+
+// ❌ CANCEL
+function cancelAction() {
+  pendingTables = [];
+  allowContinue = false;
+
+  clearInterval(countdownInterval);
+
+  document.getElementById("confirmModal").classList.add("hidden");
+}
+
+// ▶️ CONTINUE
+function continueAction() {
+  if (!allowContinue) return;
+
+  document.getElementById("confirmModal").classList.add("hidden");
+  document.getElementById("passwordModal").classList.remove("hidden");
+}
+
+// 🔐 CLOSE PASSWORD MODAL
+function closePasswordModal() {
+  document.getElementById("passwordModal").classList.add("hidden");
+  document.getElementById("rePasswordInput").value = "";
+  document.getElementById("pwError").innerText = "";
+}
+
+// 🔐 VERIFY PASSWORD AGAIN
+async function verifyPasswordAndRun() {
+  const pass = document.getElementById("rePasswordInput").value;
+
+  if (!pass) {
+    document.getElementById("pwError").innerText = "Enter password";
     return;
   }
 
-  if (!confirm("⚠️ All data will be deleted permanently!")) return;
-
-  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/truncate-tables", {
+  const res = await fetch("http://localhost:3000/verify-password", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password: pass })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    document.getElementById("pwError").innerText = "❌ Wrong password";
+    return;
+  }
+
+  document.getElementById("passwordModal").classList.add("hidden");
+
+  runTruncate(pass);
+}
+
+// 💥 EXECUTE TRUNCATE
+async function runTruncate(pass) {
+  const res = await fetch("http://localhost:3000/truncate-tables", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      tables: selected,
-      password: savedPassword
+      tables: pendingTables,
+      password: pass
     })
   });
 
   const data = await res.json();
 
   document.getElementById("status").innerText = data.message;
+
+  pendingTables = [];
 }
+
 </script>
 
 </body>
