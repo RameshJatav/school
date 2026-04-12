@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+<!-- 🔐 Login Screen -->
+<div id="loginBox" class="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+  <h2 class="text-xl font-bold mb-4">🔐 Enter Password</h2>
+  
+  <input id="passwordInput" type="password" placeholder="Enter password"
+    class="w-full border p-2 rounded mb-3"/>
+
+  <button onclick="checkPassword()" 
+    class="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">
+    Unlock
+  </button>
+
+  <p id="loginError" class="text-red-500 mt-2 text-sm"></p>
+</div>
+
+<!-- 🔥 Main Panel -->
+<div id="mainPanel" class="hidden bg-white shadow-xl rounded-2xl w-full max-w-2xl p-6">
+  
+  <h1 class="text-2xl font-bold text-center mb-4">🗂 Table Manager</h1>
+
+  <div class="flex justify-between mb-3">
+    <label class="flex items-center gap-2">
+      <input type="checkbox" onclick="selectAll(this)">
+      Select All
+    </label>
+
+    <button onclick="loadTables()" class="text-sm bg-blue-500 text-white px-2 py-1 rounded">
+      Refresh
+    </button>
+  </div>
+
+  <div id="tables" class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto border p-3 rounded"></div>
+
+  <button onclick="truncateTables()" 
+    class="w-full mt-4 bg-red-500 text-white py-2 rounded hover:bg-red-600">
+    ⚠️ Truncate Selected
+  </button>
+
+  <p id="status" class="text-center mt-3 text-sm"></p>
+</div>
+
+<script>
+let savedPassword = "";
+
+// 🔐 Secure password check (backend verify)
+async function checkPassword() {
+  const pass = document.getElementById("passwordInput").value;
+
+  if (!pass) {
+    document.getElementById("loginError").innerText = "Enter password";
+    return;
+  }
+
+  try {
+    const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/verify-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ password: pass })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      document.getElementById("loginError").innerText = data.message;
+      return;
+    }
+
+    // ✅ correct password
+    savedPassword = pass;
+
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("mainPanel").classList.remove("hidden");
+
+    loadTables();
+
+  } catch (err) {
+    document.getElementById("loginError").innerText = "Server error";
+  }
+}
+
+// Load tables
+async function loadTables() {
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/tables");
+  const data = await res.json();
+
+  const container = document.getElementById("tables");
+  container.innerHTML = "";
+
+  data.tables.forEach(table => {
+    container.innerHTML += `
+      <label class="flex items-center gap-2 bg-gray-50 p-2 rounded hover:bg-gray-100 cursor-pointer">
+        <input type="checkbox" value="${table}">
+        ${table}
+      </label>
+    `;
+  });
+}
+
+// Select all
+function selectAll(source) {
+  document.querySelectorAll("#tables input")
+    .forEach(cb => cb.checked = source.checked);
+}
+
+// Truncate
+async function truncateTables() {
+  const selected = Array.from(document.querySelectorAll("#tables input:checked"))
+                        .map(cb => cb.value);
+
+  if (selected.length === 0) {
+    alert("Select at least one table");
+    return;
+  }
+
+  if (!confirm("⚠️ All data will be deleted permanently!")) return;
+
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/truncate-tables", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      tables: selected,
+      password: savedPassword
+    })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("status").innerText = data.message;
+}
+</script>
+
+</body>
+</html>

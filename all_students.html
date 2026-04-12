@@ -6,15 +6,12 @@
     <title>All Students | Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-   <style>
-
+    <style>
         .sidebar-gradient { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
         .header-shadow { box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-
-</style>
+    </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
-
 
 <div class="min-h-screen flex">
     <aside id="sidebar" class="fixed lg:static z-40 top-0 left-0 w-72 h-full sidebar-gradient text-white flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
@@ -57,7 +54,6 @@
 
     <div id="overlay" class="fixed inset-0 bg-black/40 z-30 hidden"></div>
 
-
     <div class="flex-1 flex flex-col min-w-0">
         <header class="bg-white header-shadow sticky top-0 z-30 h-20 flex items-center px-4 md:px-8">
             <button id="menu-btn" class="lg:hidden p-2 mr-4 text-slate-600"><i class="fas fa-bars text-xl"></i></button>
@@ -79,8 +75,7 @@
                                 <th class="p-5 text-[10px] font-black uppercase text-slate-500 tracking-widest text-center">Details</th>
                             </tr>
                         </thead>
-                        <tbody id="student-list" class="divide-y divide-slate-50">
-                            </tbody>
+                        <tbody id="student-list" class="divide-y divide-slate-50"></tbody>
                     </table>
                 </div>
             </div>
@@ -99,19 +94,18 @@
         </div>
 
         <div class="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar space-y-10">
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-2 text-center">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Student Photo</p>
-                    <img id="m-s-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                    <img id="m-s-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50">
                 </div>
                 <div class="space-y-2 text-center">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Father's Photo</p>
-                    <img id="m-f-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                    <img id="m-f-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50">
                 </div>
                 <div class="space-y-2 text-center">
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mother's Photo</p>
-                    <img id="m-m-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50 img-zoom">
+                    <img id="m-m-photo" class="w-full h-56 object-cover rounded-3xl border-4 border-white shadow-md bg-slate-50">
                 </div>
             </div>
 
@@ -167,8 +161,8 @@
 
 <script>
     const API = "https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission";
-    const IMG_BASE = "https://dramatic-carrying-islamic-tri.trycloudflare.com/uploads/students/";
-    const adminId = localStorage.getItem('adminId'); // Make sure adminId is stored
+    const adminId = localStorage.getItem('adminId');
+    const PLACEHOLDER = 'https://via.placeholder.com/300?text=No+Image';
 
     async function fetchAllStudents() {
         try {
@@ -183,11 +177,14 @@
         tbody.innerHTML = students.map(s => {
             const statusColor = s.status === 'approved' ? 'bg-emerald-50 text-emerald-600' : s.status === 'rejected' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600';
             
+            // Logic: Backend provides full URL, use it directly
+            const studentImg = s.student_photo ? s.student_photo : 'https://via.placeholder.com/40';
+
             return `
             <tr class="hover:bg-slate-50/50 transition">
                 <td class="p-5">
                     <div class="flex items-center gap-3">
-                        <img src="${s.student_photo ? IMG_BASE + s.student_photo.split('\\').pop() : 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover border">
+                        <img src="${studentImg}" class="w-10 h-10 rounded-full object-cover border" onerror="this.src='https://via.placeholder.com/40'">
                         <div>
                             <p class="font-bold text-slate-800">${s.first_name} ${s.last_name}</p>
                             <p class="text-[10px] text-slate-400 font-bold">${s.email}</p>
@@ -227,24 +224,23 @@
     }
 
     function showDetails(s) {
-        const clean = (p) => p ? IMG_BASE + p.split('\\').pop() : 'https://via.placeholder.com/300';
-        
-        document.getElementById('m-s-photo').src = clean(s.student_photo);
-        document.getElementById('m-f-photo').src = clean(s.father_photo);
-        document.getElementById('m-m-photo').src = clean(s.mother_photo);
-        document.getElementById('m-sign').src = clean(s.signature);
+        // Updated: No manual path building, using direct backend URLs
+        document.getElementById('m-s-photo').src = s.student_photo || PLACEHOLDER;
+        document.getElementById('m-f-photo').src = s.father_photo || PLACEHOLDER;
+        document.getElementById('m-m-photo').src = s.mother_photo || PLACEHOLDER;
+        document.getElementById('m-sign').src = s.signature || PLACEHOLDER;
 
-        document.getElementById('m-reg').innerText = s.registration_no;
-        document.getElementById('m-name').innerText = s.first_name + " " + s.last_name;
-        document.getElementById('m-dob').innerText = new Date(s.date_of_birth).toLocaleDateString();
+        document.getElementById('m-reg').innerText = s.registration_no || 'N/A';
+        document.getElementById('m-name').innerText = s.first_name + " " + (s.last_name || "");
+        document.getElementById('m-dob').innerText = s.date_of_birth ? new Date(s.date_of_birth).toLocaleDateString() : 'N/A';
         document.getElementById('m-aadhar').innerText = s.aadhar_no || 'N/A';
-        document.getElementById('m-blood').innerText = s.blood_group;
-        document.getElementById('m-session').innerText = s.academic_year;
-        document.getElementById('m-fname').innerText = s.father_name;
-        document.getElementById('m-fmob').innerText = s.father_mobile;
-        document.getElementById('m-mname').innerText = s.mother_name;
-        document.getElementById('m-mmob').innerText = s.mother_mobile;
-        document.getElementById('m-address').innerText = `${s.address_line1}, ${s.city}, ${s.state} - ${s.pincode}`;
+        document.getElementById('m-blood').innerText = s.blood_group || 'N/A';
+        document.getElementById('m-session').innerText = s.academic_year || 'N/A';
+        document.getElementById('m-fname').innerText = s.father_name || 'N/A';
+        document.getElementById('m-fmob').innerText = s.father_mobile || 'N/A';
+        document.getElementById('m-mname').innerText = s.mother_name || 'N/A';
+        document.getElementById('m-mmob').innerText = s.mother_mobile || 'N/A';
+        document.getElementById('m-address').innerText = `${s.address_line1 || ""}, ${s.city || ""}, ${s.state || ""} - ${s.pincode || ""}`;
         document.getElementById('m-remarks').innerText = s.remarks || 'No specific remarks.';
 
         document.getElementById('detailsModal').classList.remove('hidden');
@@ -252,22 +248,21 @@
 
     function closeModal() { document.getElementById('detailsModal').classList.add('hidden'); }
 
-// Sidebar Toggle (FIXED)
-const menuBtn = document.getElementById("menu-btn");
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
+    // Sidebar Toggle
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
 
-menuBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("-translate-x-full");
-    overlay.classList.toggle("hidden");
-});
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+    });
 
-overlay.addEventListener("click", () => {
-    sidebar.classList.add("-translate-x-full");
-    overlay.classList.add("hidden");
-});
+    overlay.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+    });
 
-// Initial Fetch
     fetchAllStudents();
 </script>
 </body>
