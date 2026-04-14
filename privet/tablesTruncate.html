@@ -141,7 +141,7 @@ async function checkPassword() {
     return;
   }
 
-  const res = await fetch("https://jgqw00mq-3000.inc1.devtunnels.ms/verify-password", {
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/verify-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ password: pass })
@@ -164,7 +164,7 @@ async function checkPassword() {
 
 // 📦 LOAD TABLES
 async function loadTables() {
-  const res = await fetch("https://jgqw00mq-3000.inc1.devtunnels.ms/tables");
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/tables");
   const data = await res.json();
 
   const container = document.getElementById("tables");
@@ -269,7 +269,7 @@ async function verifyPasswordAndRun() {
     return;
   }
 
-  const res = await fetch("https://jgqw00mq-3000.inc1.devtunnels.ms/verify-password", {
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/verify-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ password: pass })
@@ -289,7 +289,7 @@ async function verifyPasswordAndRun() {
 
 // 💥 EXECUTE TRUNCATE
 async function runTruncate(pass) {
-  const res = await fetch("https://jgqw00mq-3000.inc1.devtunnels.ms/truncate-tables", {
+  const res = await fetch("https://dramatic-carrying-islamic-tri.trycloudflare.com/truncate-tables", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
