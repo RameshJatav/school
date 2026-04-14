@@ -283,6 +283,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminId = localStorage.getItem("adminId");
   const adminName = localStorage.getItem("adminName");
 
+  console.log("Admin ID:", adminId); // DEBUG
+
   if(adminId){
     document.getElementById("admin-id").innerText = "Admin ID: " + adminId;
   } else {
@@ -297,6 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
 // FETCH DATA
 async function getAttendanceReport(){
 
@@ -308,7 +311,12 @@ async function getAttendanceReport(){
   const tbody = document.getElementById('report-tbody');
 
   if(!adminId){
-    alert("Login expired");
+    alert("Login expired (No adminId)");
+    return;
+  }
+
+  if(!token){
+    alert("Token missing, please login again");
     return;
   }
 
@@ -321,45 +329,61 @@ async function getAttendanceReport(){
     if(cls) url += `&class_applied=${cls}`;
     if(date) url += `&date=${date}`;
 
+    console.log("API URL:", url); // DEBUG
+
     const res = await fetch(url,{
+      method: "GET",
       headers:{
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       }
     });
 
+    // ✅ Check HTTP status first
+    if(!res.ok){
+      throw new Error("HTTP Error: " + res.status);
+    }
+
     const result = await res.json();
+
+    console.log("API Response:", result); // DEBUG
 
     if(result.success){
       renderTable(result.data);
       showStats(result.data);
+    } else {
+      tbody.innerHTML = `<tr><td colspan="4">${result.message || "No Data Found"}</td></tr>`;
     }
 
   } catch(e){
-    tbody.innerHTML = `<tr><td colspan="4">Server Error</td></tr>`;
+    console.error("ERROR:", e);
+    tbody.innerHTML = `<tr><td colspan="4">Server Error: ${e.message}</td></tr>`;
   }
 
 }
+
 
 // TABLE
 function renderTable(data){
 
   const tbody = document.getElementById('report-tbody');
 
-  if(data.length === 0){
+  if(!data || data.length === 0){
     tbody.innerHTML = `<tr><td colspan="4">No Records</td></tr>`;
     return;
   }
 
   tbody.innerHTML = data.map(r => `
   <tr>
-    <td>${r.student_email}</td>
-    <td>${r.class_applied}</td>
-    <td>${r.attendance_date}</td>
-    <td>${r.status}</td>
+    <td>${r.student_email || "-"}</td>
+    <td>${r.class_applied || "-"}</td>
+    <td>${r.attendance_date || "-"}</td>
+    <td>${r.status || "-"}</td>
   </tr>
   `).join('');
 
 }
+
 
 // STATS
 function showStats(data){
@@ -374,6 +398,7 @@ function showStats(data){
   document.getElementById('a-count').innerText = a;
 
 }
+
 
 // LOGOUT
 function logout(){
