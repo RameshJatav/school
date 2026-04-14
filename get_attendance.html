@@ -274,150 +274,133 @@
       }
       </script> -->
 
-      <script>
-        const API = "https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission";
-const adminId = localStorage.getItem("adminId");
-const PLACEHOLDER = "https://via.placeholder.com/40";
+  <script>
+const API_URL = "https://dramatic-carrying-islamic-tri.trycloudflare.com";
+const adminId = localStorage.getItem('adminId');
+const token = localStorage.getItem('adminToken');
 
-// ================= IMAGE FIX =================
-function fixImage(url) {
-    if (!url) return PLACEHOLDER;
+document.addEventListener("DOMContentLoaded", () => {
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
 
-    // backend local path remove (IMPORTANT FIX)
-    url = url.replace("//root/school_project", "");
+    if (menuBtn) {
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("-translate-x-full");
+            overlay.classList.toggle("hidden");
+        });
+    }
 
-    return url;
-}
+    if (overlay) {
+        overlay.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            overlay.classList.add("hidden");
+        });
+    }
 
-// ================= FETCH STUDENTS =================
-async function fetchAllStudents() {
+    // auto load (optional)
+    getAttendanceReport();
+});
+
+
+window.getAttendanceReport = async function () {
+    const cls = document.getElementById('class-filter')?.value || "";
+    const date = document.getElementById('date-filter')?.value || "";
+    const tbody = document.getElementById('report-tbody');
+
+    if (!tbody) {
+        console.log("ERROR: report-tbody not found in HTML");
+        return;
+    }
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="4" class="p-20 text-center">
+                Loading...
+            </td>
+        </tr>
+    `;
+
     try {
+        let url = `${API_URL}/attendance/class-report?admin_id=${adminId}`;
 
-        console.log("ADMIN ID:", adminId);
+        if (cls) url += `&class_applied=${cls}`;
+        if (date) url += `&date=${date}`;
 
-        if (!adminId) {
-            alert("Admin login required (adminId missing)");
-            return;
-        }
-
-        const res = await fetch(
-            `${API}/getStudents_classwise?admin_id=${adminId}`
-        );
-
-        if (!res.ok) {
-            console.log("API Error:", res.status);
-            return;
-        }
+        const res = await fetch(url, {
+            headers: {
+                "Authorization": `Bearer ${token || ""}`
+            }
+        });
 
         const result = await res.json();
 
-        console.log("API RESULT:", result);
+        console.log("API RESPONSE:", result);
 
-        if (result.success && result.data && result.data.length > 0) {
-            renderTable(result.data);
-        } else {
-            document.getElementById("student-list").innerHTML =
-                `<tr><td colspan="5" class="p-5 text-center text-gray-500">
-                    No Students Found
-                </td></tr>`;
+        if (!result.success || !result.data) {
+            tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-red-500">No Data Found</td></tr>`;
+            return;
         }
 
+        renderTable(result.data);
+        showStats(result.data);
+
     } catch (err) {
-        console.log("Fetch Error:", err);
-
-        document.getElementById("student-list").innerHTML =
-            `<tr><td colspan="5" class="p-5 text-center text-red-500">
-                Server Error
-            </td></tr>`;
+        console.log(err);
+        tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-red-500">Server Error</td></tr>`;
     }
-}
+};
 
-// ================= RENDER TABLE =================
-function renderTable(students) {
 
-    const tbody = document.getElementById("student-list");
+function renderTable(data) {
+    const tbody = document.getElementById('report-tbody');
 
-    tbody.innerHTML = students.map(s => {
+    if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center">No Records Found</td></tr>`;
+        return;
+    }
 
-        const img = fixImage(s.student_photo);
-
-        const statusColor =
-            s.status === "approved"
-                ? "bg-emerald-100 text-emerald-700"
-                : s.status === "rejected"
-                ? "bg-rose-100 text-rose-700"
-                : "bg-amber-100 text-amber-700";
-
-        return `
-        <tr class="hover:bg-slate-50 border-b">
-
-            <!-- STUDENT INFO -->
-            <td class="p-4 flex items-center gap-3">
-                <img src="${img}"
-                     class="w-10 h-10 rounded-full object-cover border"
-                     onerror="this.src='${PLACEHOLDER}'"/>
-
-                <div>
-                    <p class="font-bold text-slate-800">
-                        ${s.first_name || ""} ${s.last_name || ""}
-                    </p>
-                    <p class="text-[10px] text-slate-400">
-                        ${s.email || ""}
-                    </p>
-                </div>
+    tbody.innerHTML = data.map(r => `
+        <tr>
+            <td class="p-5">
+                <p class="font-bold">${r.student_email || "N/A"}</p>
             </td>
 
-            <!-- CLASS -->
-            <td class="p-4 font-bold">
-                CLASS ${s.class_applied || "N/A"}
-            </td>
+            <td class="p-5">Class ${r.class_applied || "N/A"}</td>
 
-            <!-- GUARDIAN -->
-            <td class="p-4">
-                <p class="font-bold text-slate-700">
-                    ${s.father_name || "N/A"}
-                </p>
-                <p class="text-xs text-emerald-600">
-                    ${s.father_mobile || ""}
-                </p>
-            </td>
+            <td class="p-5 text-center">${r.attendance_date || ""}</td>
 
-            <!-- STATUS -->
-            <td class="p-4">
-                <span class="px-3 py-1 rounded text-xs font-bold ${statusColor}">
-                    ${s.status || "pending"}
+            <td class="p-5 text-center">
+                <span class="px-3 py-1 rounded text-white ${
+                    r.status === "PRESENT" ? "bg-green-500" : "bg-red-500"
+                }">
+                    ${r.status}
                 </span>
             </td>
-
-            <!-- DETAILS BUTTON -->
-            <td class="p-4 text-center">
-                <button onclick='showDetails(${JSON.stringify(s)})'
-                        class="bg-slate-900 text-white px-3 py-1 rounded hover:bg-emerald-600">
-                    View
-                </button>
-            </td>
-
         </tr>
-        `;
-    }).join("");
+    `).join('');
 }
 
-// ================= DETAILS POPUP =================
-function showDetails(s) {
 
-    alert(
-`Name: ${s.first_name || ""} ${s.last_name || ""}
-Email: ${s.email || ""}
-Class: ${s.class_applied || ""}
-Father: ${s.father_name || ""}
-Mobile: ${s.father_mobile || ""}`
-    );
+function showStats(data) {
+    const panel = document.getElementById('stats-panel');
+    if (!panel) return;
+
+    panel.classList.remove('hidden');
+
+    const present = data.filter(d => d.status === "PRESENT").length;
+    const absent = data.filter(d => d.status === "ABSENT").length;
+
+    document.getElementById('p-count').innerText = present;
+    document.getElementById('a-count').innerText = absent;
 }
 
-// ================= INIT CALL =================
-fetchAllStudents();
 
-      </script>
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+</script>
 
     </body>
 </html>
