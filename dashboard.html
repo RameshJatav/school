@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 1. Fetch Students to count Registered, Active, and Pending
             // Note: Admin ID is hardcoded here for current session context as per your model
             const adminId = localStorage.getItem('adminId'); 
-            const studentRes = await fetch(`https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission/allstudents/get?admin_id=${adminId}`, {
+            const studentRes = await fetch(`https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission/getStudents_classwise?admin_id=${adminId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const studentData = await studentRes.json();
