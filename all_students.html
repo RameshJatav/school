@@ -276,7 +276,7 @@
 
             console.log("ADMIN ID:", adminId);
 
-            const res = await fetch(`${API}/allstudents/get?admin_id=${adminId}`);
+            const res = await fetch(`${API}/getStudents_classwise?admin_id=${adminId}`);
 
             if (!res.ok) {
                 console.log("API Failed");
