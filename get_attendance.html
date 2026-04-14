@@ -183,7 +183,7 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     const API_URL = "https://dramatic-carrying-islamic-tri.trycloudflare.com";
 
     async function getAttendanceReport() {
@@ -272,6 +272,152 @@
         localStorage.clear();
         window.location.href = "index.html";
       }
+      </script> -->
+
+      <script>
+        const API = "https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission";
+const adminId = localStorage.getItem("adminId");
+const PLACEHOLDER = "https://via.placeholder.com/40";
+
+// ================= IMAGE FIX =================
+function fixImage(url) {
+    if (!url) return PLACEHOLDER;
+
+    // backend local path remove (IMPORTANT FIX)
+    url = url.replace("//root/school_project", "");
+
+    return url;
+}
+
+// ================= FETCH STUDENTS =================
+async function fetchAllStudents() {
+    try {
+
+        console.log("ADMIN ID:", adminId);
+
+        if (!adminId) {
+            alert("Admin login required (adminId missing)");
+            return;
+        }
+
+        const res = await fetch(
+            `${API}/getStudents_classwise?admin_id=${adminId}`
+        );
+
+        if (!res.ok) {
+            console.log("API Error:", res.status);
+            return;
+        }
+
+        const result = await res.json();
+
+        console.log("API RESULT:", result);
+
+        if (result.success && result.data && result.data.length > 0) {
+            renderTable(result.data);
+        } else {
+            document.getElementById("student-list").innerHTML =
+                `<tr><td colspan="5" class="p-5 text-center text-gray-500">
+                    No Students Found
+                </td></tr>`;
+        }
+
+    } catch (err) {
+        console.log("Fetch Error:", err);
+
+        document.getElementById("student-list").innerHTML =
+            `<tr><td colspan="5" class="p-5 text-center text-red-500">
+                Server Error
+            </td></tr>`;
+    }
+}
+
+// ================= RENDER TABLE =================
+function renderTable(students) {
+
+    const tbody = document.getElementById("student-list");
+
+    tbody.innerHTML = students.map(s => {
+
+        const img = fixImage(s.student_photo);
+
+        const statusColor =
+            s.status === "approved"
+                ? "bg-emerald-100 text-emerald-700"
+                : s.status === "rejected"
+                ? "bg-rose-100 text-rose-700"
+                : "bg-amber-100 text-amber-700";
+
+        return `
+        <tr class="hover:bg-slate-50 border-b">
+
+            <!-- STUDENT INFO -->
+            <td class="p-4 flex items-center gap-3">
+                <img src="${img}"
+                     class="w-10 h-10 rounded-full object-cover border"
+                     onerror="this.src='${PLACEHOLDER}'"/>
+
+                <div>
+                    <p class="font-bold text-slate-800">
+                        ${s.first_name || ""} ${s.last_name || ""}
+                    </p>
+                    <p class="text-[10px] text-slate-400">
+                        ${s.email || ""}
+                    </p>
+                </div>
+            </td>
+
+            <!-- CLASS -->
+            <td class="p-4 font-bold">
+                CLASS ${s.class_applied || "N/A"}
+            </td>
+
+            <!-- GUARDIAN -->
+            <td class="p-4">
+                <p class="font-bold text-slate-700">
+                    ${s.father_name || "N/A"}
+                </p>
+                <p class="text-xs text-emerald-600">
+                    ${s.father_mobile || ""}
+                </p>
+            </td>
+
+            <!-- STATUS -->
+            <td class="p-4">
+                <span class="px-3 py-1 rounded text-xs font-bold ${statusColor}">
+                    ${s.status || "pending"}
+                </span>
+            </td>
+
+            <!-- DETAILS BUTTON -->
+            <td class="p-4 text-center">
+                <button onclick='showDetails(${JSON.stringify(s)})'
+                        class="bg-slate-900 text-white px-3 py-1 rounded hover:bg-emerald-600">
+                    View
+                </button>
+            </td>
+
+        </tr>
+        `;
+    }).join("");
+}
+
+// ================= DETAILS POPUP =================
+function showDetails(s) {
+
+    alert(
+`Name: ${s.first_name || ""} ${s.last_name || ""}
+Email: ${s.email || ""}
+Class: ${s.class_applied || ""}
+Father: ${s.father_name || ""}
+Mobile: ${s.father_mobile || ""}`
+    );
+}
+
+// ================= INIT CALL =================
+fetchAllStudents();
+
       </script>
-</body>
+
+    </body>
 </html>
