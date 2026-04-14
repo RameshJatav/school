@@ -198,7 +198,7 @@
         tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center"><i class="fas fa-spinner fa-spin text-emerald-500 text-3xl"></i></td></tr>`;
 
         try {
-            let url = `${API_URL}/attendance/class-report?admin_id=${adminId}`;
+            let url = `${API_URL}/attendance/?admin_id=${adminId}`;
             if(cls) url += `&class_applied=${cls}`;
             if(date) url += `&date=${date}`;
 
@@ -272,120 +272,113 @@
         localStorage.clear();
         window.location.href = "index.html";
       }
-      </script> -->
-
+</script> -->
 
 <script>
 const API_URL = "https://dramatic-carrying-islamic-tri.trycloudflare.com";
 
+// LOAD ADMIN DATA
 document.addEventListener("DOMContentLoaded", () => {
-    getAttendanceReport(); // page load pe sab data show hoga
+
+  const adminId = localStorage.getItem("adminId");
+  const adminName = localStorage.getItem("adminName");
+
+  if(adminId){
+    document.getElementById("admin-id").innerText = "Admin ID: " + adminId;
+  } else {
+    document.getElementById("admin-id").innerText = "No Admin ID";
+  }
+
+  if(adminName){
+    document.getElementById("admin-name").innerText = adminName;
+  } else {
+    document.getElementById("admin-name").innerText = "Admin";
+  }
+
 });
 
-// ✅ MAIN FUNCTION
-async function getAttendanceReport() {
-    const cls = document.getElementById('class-filter').value;
-    const date = document.getElementById('date-filter').value;
-    const adminId = localStorage.getItem('adminId');
-    const tbody = document.getElementById('report-tbody');
+// FETCH DATA
+async function getAttendanceReport(){
 
-    if (!adminId) {
-        alert("Login expired");
-        return;
+  const cls = document.getElementById('class-filter').value;
+  const date = document.getElementById('date-filter').value;
+  const adminId = localStorage.getItem('adminId');
+  const token = localStorage.getItem('adminToken');
+
+  const tbody = document.getElementById('report-tbody');
+
+  if(!adminId){
+    alert("Login expired");
+    return;
+  }
+
+  tbody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+
+  try {
+
+    let url = `${API_URL}/attendance/?admin_id=${adminId}`;
+
+    if(cls) url += `&class_applied=${cls}`;
+    if(date) url += `&date=${date}`;
+
+    const res = await fetch(url,{
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const result = await res.json();
+
+    if(result.success){
+      renderTable(result.data);
+      showStats(result.data);
     }
 
-    tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">Loading...</td></tr>`;
+  } catch(e){
+    tbody.innerHTML = `<tr><td colspan="4">Server Error</td></tr>`;
+  }
 
-    try {
-        let url = `${API_URL}/attendance/class-report?admin_id=${adminId}`;
-
-        // ✅ sirf tab add karo jab value ho
-        if (cls !== "") url += `&class_applied=${cls}`;
-        if (date !== "") url += `&date=${date}`;
-
-        const res = await fetch(url);
-        const result = await res.json();
-
-        if (!result.success || !result.data) {
-            tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">No Data Found</td></tr>`;
-            return;
-        }
-
-        renderTable(result.data);
-        showStats(result.data);
-
-    } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-500">Server Error</td></tr>`;
-    }
 }
 
+// TABLE
+function renderTable(data){
 
-// ✅ TABLE RENDER
-function renderTable(data) {
-    const tbody = document.getElementById('report-tbody');
+  const tbody = document.getElementById('report-tbody');
 
-    if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">No Records Found</td></tr>`;
-        return;
-    }
+  if(data.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4">No Records</td></tr>`;
+    return;
+  }
 
-    tbody.innerHTML = data.map(r => `
-        <tr>
-            <td class="p-3">
-                ${r.student_email || "N/A"}
-            </td>
+  tbody.innerHTML = data.map(r => `
+  <tr>
+    <td>${r.student_email}</td>
+    <td>${r.class_applied}</td>
+    <td>${r.attendance_date}</td>
+    <td>${r.status}</td>
+  </tr>
+  `).join('');
 
-            <td class="p-3">
-                Class ${r.class_applied || ""}
-            </td>
-
-            <td class="p-3 text-center">
-                ${r.attendance_date || ""}
-            </td>
-
-            <td class="p-3 text-center">
-                <span class="${r.status === 'PRESENT' ? 'text-green-600' : 'text-red-600'} font-bold">
-                    ${r.status}
-                </span>
-            </td>
-        </tr>
-    `).join('');
 }
 
+// STATS
+function showStats(data){
 
-// ✅ STATS
-function showStats(data) {
-    const panel = document.getElementById('stats-panel');
-    panel.classList.remove('hidden');
+  const panel = document.getElementById('stats-panel');
+  panel.classList.remove('hidden');
 
-    const present = data.filter(x => x.status === "PRESENT").length;
-    const absent = data.filter(x => x.status === "ABSENT").length;
+  const p = data.filter(r => r.status === 'PRESENT').length;
+  const a = data.filter(r => r.status === 'ABSENT').length;
 
-    document.getElementById('p-count').innerText = present;
-    document.getElementById('a-count').innerText = absent;
+  document.getElementById('p-count').innerText = p;
+  document.getElementById('a-count').innerText = a;
+
 }
 
-
-// ✅ SIDEBAR
-const menuBtn = document.getElementById("menu-btn");
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-
-menuBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("-translate-x-full");
-    overlay.classList.toggle("hidden");
-});
-
-overlay.addEventListener("click", () => {
-    sidebar.classList.add("-translate-x-full");
-    overlay.classList.add("hidden");
-});
-
-
-// ✅ LOGOUT
-function logout() {
-    localStorage.clear();
-    window.location.href = "index.html";
+// LOGOUT
+function logout(){
+  localStorage.clear();
+  window.location.href = "index.html";
 }
 </script>
 
