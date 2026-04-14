@@ -159,7 +159,7 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     const API = "https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission";
     const adminId = localStorage.getItem('adminId');
     const PLACEHOLDER = 'https://via.placeholder.com/300?text=No+Image';
@@ -262,6 +262,151 @@
         sidebar.classList.add("-translate-x-full");
         overlay.classList.add("hidden");
     });
+
+    fetchAllStudents();
+</script> -->
+
+<script>
+    const API = "https://dramatic-carrying-islamic-tri.trycloudflare.com/studentAdmission";
+    const adminId = localStorage.getItem('adminId');
+    const PLACEHOLDER = 'https://via.placeholder.com/300?text=No+Image';
+
+    async function fetchAllStudents() {
+        try {
+
+            console.log("ADMIN ID:", adminId);
+
+            const res = await fetch(`${API}/allstudents/get?admin_id=${adminId}`);
+
+            if (!res.ok) {
+                console.log("API Failed");
+                return;
+            }
+
+            const result = await res.json();
+
+            console.log("API RESULT:", result);
+
+            if (result && result.data && result.data.length > 0) {
+                renderTable(result.data);
+            } else {
+                document.getElementById('student-list').innerHTML =
+                    `<tr><td colspan="5" class="text-center p-5">No Students Found</td></tr>`;
+            }
+
+        } catch (err) {
+            console.log("Fetch Error", err);
+        }
+    }
+
+    function renderTable(students) {
+        const tbody = document.getElementById('student-list');
+
+        tbody.innerHTML = students.map(s => {
+
+            const statusColor =
+                s.status === 'approved'
+                    ? 'bg-emerald-50 text-emerald-600'
+                    : s.status === 'rejected'
+                        ? 'bg-rose-50 text-rose-600'
+                        : 'bg-amber-50 text-amber-600';
+
+            const studentImg = s.student_photo
+                ? s.student_photo
+                : 'https://via.placeholder.com/40';
+
+            return `
+            <tr class="hover:bg-slate-50/50 transition">
+                <td class="p-5">
+                    <div class="flex items-center gap-3">
+                        <img src="${studentImg}" class="w-10 h-10 rounded-full object-cover border"
+                        onerror="this.src='https://via.placeholder.com/40'">
+                        <div>
+                            <p class="font-bold text-slate-800">${s.first_name} ${s.last_name}</p>
+                            <p class="text-[10px] text-slate-400 font-bold">${s.email}</p>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="p-5 font-black text-xs text-slate-600">CLASS ${s.class_applied}</td>
+
+                <td class="p-5">
+                    <p class="text-xs font-bold text-slate-700">${s.father_name}</p>
+                    <p class="text-[10px] text-emerald-600 font-bold">${s.father_mobile}</p>
+                </td>
+
+                <td class="p-5">
+                    <select onchange="updateStatus('${s.email}', this.value)"
+                        class="${statusColor} p-2 text-[10px] font-black rounded-lg border-none outline-none ring-1 ring-slate-200">
+
+                        <option value="pending" ${s.status === 'pending' ? 'selected' : ''}>PENDING</option>
+                        <option value="approved" ${s.status === 'approved' ? 'selected' : ''}>APPROVED</option>
+                        <option value="rejected" ${s.status === 'rejected' ? 'selected' : ''}>REJECTED</option>
+
+                    </select>
+                </td>
+
+                <td class="p-5 text-center">
+                    <button onclick='showDetails(${JSON.stringify(s)})'
+                        class="w-10 h-10 bg-slate-900 text-white rounded-xl shadow-lg hover:bg-emerald-600 transition">
+                        <i class="fas fa-expand-alt"></i>
+                    </button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    async function updateStatus(email, status) {
+        try {
+            const res = await fetch(`${API}/update-status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, status })
+            });
+
+            if (res.ok) {
+                alert("Status updated!");
+                fetchAllStudents();
+            }
+
+        } catch (err) {
+            alert("Update failed");
+        }
+    }
+
+    function showDetails(s) {
+
+        document.getElementById('m-s-photo').src = s.student_photo || PLACEHOLDER;
+        document.getElementById('m-f-photo').src = s.father_photo || PLACEHOLDER;
+        document.getElementById('m-m-photo').src = s.mother_photo || PLACEHOLDER;
+        document.getElementById('m-sign').src = s.signature || PLACEHOLDER;
+
+        document.getElementById('m-reg').innerText = s.registration_no || 'N/A';
+        document.getElementById('m-name').innerText = s.first_name + " " + (s.last_name || "");
+        document.getElementById('m-dob').innerText =
+            s.date_of_birth ? new Date(s.date_of_birth).toLocaleDateString() : 'N/A';
+
+        document.getElementById('m-aadhar').innerText = s.aadhar_no || 'N/A';
+        document.getElementById('m-blood').innerText = s.blood_group || 'N/A';
+        document.getElementById('m-session').innerText = s.academic_year || 'N/A';
+
+        document.getElementById('m-fname').innerText = s.father_name || 'N/A';
+        document.getElementById('m-fmob').innerText = s.father_mobile || 'N/A';
+        document.getElementById('m-mname').innerText = s.mother_name || 'N/A';
+        document.getElementById('m-mmob').innerText = s.mother_mobile || 'N/A';
+
+        document.getElementById('m-address').innerText =
+            `${s.address_line1 || ""}, ${s.city || ""}, ${s.state || ""} - ${s.pincode || ""}`;
+
+        document.getElementById('m-remarks').innerText =
+            s.remarks || 'No specific remarks.';
+
+        document.getElementById('detailsModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('detailsModal').classList.add('hidden');
+    }
 
     fetchAllStudents();
 </script>
