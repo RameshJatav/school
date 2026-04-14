@@ -274,106 +274,77 @@
       }
       </script> -->
 
-  <script>
+
+<script>
 const API_URL = "https://dramatic-carrying-islamic-tri.trycloudflare.com";
-const adminId = localStorage.getItem('adminId');
-const token = localStorage.getItem('adminToken');
 
 document.addEventListener("DOMContentLoaded", () => {
-    const menuBtn = document.getElementById("menu-btn");
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-
-    if (menuBtn) {
-        menuBtn.addEventListener("click", () => {
-            sidebar.classList.toggle("-translate-x-full");
-            overlay.classList.toggle("hidden");
-        });
-    }
-
-    if (overlay) {
-        overlay.addEventListener("click", () => {
-            sidebar.classList.add("-translate-x-full");
-            overlay.classList.add("hidden");
-        });
-    }
-
-    // auto load (optional)
-    getAttendanceReport();
+    getAttendanceReport(); // page load pe sab data show hoga
 });
 
-
-window.getAttendanceReport = async function () {
-    const cls = document.getElementById('class-filter')?.value || "";
-    const date = document.getElementById('date-filter')?.value || "";
+// ✅ MAIN FUNCTION
+async function getAttendanceReport() {
+    const cls = document.getElementById('class-filter').value;
+    const date = document.getElementById('date-filter').value;
+    const adminId = localStorage.getItem('adminId');
     const tbody = document.getElementById('report-tbody');
 
-    if (!tbody) {
-        console.log("ERROR: report-tbody not found in HTML");
+    if (!adminId) {
+        alert("Login expired");
         return;
     }
 
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="4" class="p-20 text-center">
-                Loading...
-            </td>
-        </tr>
-    `;
+    tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">Loading...</td></tr>`;
 
     try {
         let url = `${API_URL}/attendance/class-report?admin_id=${adminId}`;
 
-        if (cls) url += `&class_applied=${cls}`;
-        if (date) url += `&date=${date}`;
+        // ✅ sirf tab add karo jab value ho
+        if (cls !== "") url += `&class_applied=${cls}`;
+        if (date !== "") url += `&date=${date}`;
 
-        const res = await fetch(url, {
-            headers: {
-                "Authorization": `Bearer ${token || ""}`
-            }
-        });
-
+        const res = await fetch(url);
         const result = await res.json();
 
-        console.log("API RESPONSE:", result);
-
         if (!result.success || !result.data) {
-            tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-red-500">No Data Found</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">No Data Found</td></tr>`;
             return;
         }
 
         renderTable(result.data);
         showStats(result.data);
 
-    } catch (err) {
-        console.log(err);
-        tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center text-red-500">Server Error</td></tr>`;
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-500">Server Error</td></tr>`;
     }
-};
+}
 
 
+// ✅ TABLE RENDER
 function renderTable(data) {
     const tbody = document.getElementById('report-tbody');
 
-    if (!data || data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-20 text-center">No Records Found</td></tr>`;
+    if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center">No Records Found</td></tr>`;
         return;
     }
 
     tbody.innerHTML = data.map(r => `
         <tr>
-            <td class="p-5">
-                <p class="font-bold">${r.student_email || "N/A"}</p>
+            <td class="p-3">
+                ${r.student_email || "N/A"}
             </td>
 
-            <td class="p-5">Class ${r.class_applied || "N/A"}</td>
+            <td class="p-3">
+                Class ${r.class_applied || ""}
+            </td>
 
-            <td class="p-5 text-center">${r.attendance_date || ""}</td>
+            <td class="p-3 text-center">
+                ${r.attendance_date || ""}
+            </td>
 
-            <td class="p-5 text-center">
-                <span class="px-3 py-1 rounded text-white ${
-                    r.status === "PRESENT" ? "bg-green-500" : "bg-red-500"
-                }">
+            <td class="p-3 text-center">
+                <span class="${r.status === 'PRESENT' ? 'text-green-600' : 'text-red-600'} font-bold">
                     ${r.status}
                 </span>
             </td>
@@ -382,20 +353,36 @@ function renderTable(data) {
 }
 
 
+// ✅ STATS
 function showStats(data) {
     const panel = document.getElementById('stats-panel');
-    if (!panel) return;
-
     panel.classList.remove('hidden');
 
-    const present = data.filter(d => d.status === "PRESENT").length;
-    const absent = data.filter(d => d.status === "ABSENT").length;
+    const present = data.filter(x => x.status === "PRESENT").length;
+    const absent = data.filter(x => x.status === "ABSENT").length;
 
     document.getElementById('p-count').innerText = present;
     document.getElementById('a-count').innerText = absent;
 }
 
 
+// ✅ SIDEBAR
+const menuBtn = document.getElementById("menu-btn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+
+menuBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("-translate-x-full");
+    overlay.classList.toggle("hidden");
+});
+
+overlay.addEventListener("click", () => {
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+});
+
+
+// ✅ LOGOUT
 function logout() {
     localStorage.clear();
     window.location.href = "index.html";
